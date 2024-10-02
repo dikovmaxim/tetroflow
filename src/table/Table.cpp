@@ -70,3 +70,11 @@ std::vector<std::byte>& Table::getElement(uint32_t key) {
     }
     return it->second;
 }
+
+std::vector<std::tuple<uint32_t, std::vector<std::byte>>> Table::listElements() {
+    std::vector<std::tuple<uint32_t, std::vector<std::byte>>> elements;
+    for (const auto& [key, data] : hashmap) {
+        elements.push_back({key, data});
+    }
+    return elements;
+}

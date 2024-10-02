@@ -78,3 +78,11 @@ std::vector<std::tuple<uint32_t, Table>> Storage::listTables() {
     }
     return result;
 }
+
+Table Storage::getTable(uint16_t id) {
+    auto it = tables.find(id);
+    if (it == tables.end()) {
+        throw std::runtime_error("Table does not exist");
+    }
+    return it->second;
+}

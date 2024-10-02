@@ -6,6 +6,7 @@
 #include <cstddef>  // for std::byte
 #include <utility>  // for std::move
 #include <cstdint>
+#include <tuple>
 
 class Table {
 private:
@@ -26,4 +27,7 @@ public:
     int getSize() const;
 
     std::vector<std::byte>& getElement(uint32_t key);
+
+    std::vector<std::tuple<uint32_t, std::vector<std::byte>>> listElements();
+
 };
