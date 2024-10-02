@@ -8,8 +8,9 @@
 
 #include "Table.hpp"
 
-Table::Table(uint32_t initialSize) {
+Table::Table(uint16_t id, uint32_t initialSize){
     hashmap.reserve(initialSize);
+    this->id = id;
 }
 
 Table::~Table() {

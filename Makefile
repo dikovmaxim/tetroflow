@@ -5,8 +5,8 @@ CXXFLAGS = -std=c++20 -Wall -Wextra -O2 -Wunused-parameter
 SRC_DIR = ./src
 BUILD_DIR = ./build
 
-# Find all source files
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+# Find all source files recursively
+SRCS = $(shell find $(SRC_DIR) -name "*.cpp")
 
 # Generate corresponding object files in the build folder
 OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
@@ -22,12 +22,9 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Rule to compile .cpp files into .o files
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(dir $@)   # Create the directory for the object file if it doesn't exist
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Create the build directory if it doesn't exist
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
 
 # Clean up the build and target
 clean:
