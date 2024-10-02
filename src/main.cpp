@@ -9,9 +9,13 @@
 #include <cstdint>
 #include <unordered_set>
 
+#include "Global.hpp"
 #include "server/Server.hpp"
 
+
 int main(int argc, char** argv) {
+
+    initStorage();
 
     std::string socketPath = "/tmp/test_socket";
     startServer(socketPath);

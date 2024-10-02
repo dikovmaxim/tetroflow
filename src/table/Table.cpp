@@ -5,12 +5,13 @@
 #include <utility>  // for std::move
 #include <stdint.h>
 #include <cstdint>
+#include <tuple>
+
 
 #include "Table.hpp"
 
-Table::Table(uint16_t id, uint32_t initialSize){
+Table::Table(uint32_t initialSize){
     hashmap.reserve(initialSize);
-    this->id = id;
 }
 
 Table::~Table() {
@@ -48,3 +49,24 @@ void Table::changeElement(uint32_t key, std::vector<std::byte>&& newData) {
     it->second = std::move(newData);  // Use move to avoid copying
 }
 
+void Table::setElement(uint32_t key, std::vector<std::byte>&& data) {
+    //if element on key exists, change it, otherwise add new element
+    auto it = hashmap.find(key);
+    if (it == hashmap.end()) {
+        hashmap.emplace(key, std::move(data));
+    } else {
+        it->second = std::move(data);
+    }
+}
+
+int Table::getSize() const{
+    return hashmap.size();
+}
+
+std::vector<std::byte>& Table::getElement(uint32_t key) {
+    auto it = hashmap.find(key);
+    if (it == hashmap.end()) {
+        throw std::runtime_error("Element does not exist");
+    }
+    return it->second;
+}

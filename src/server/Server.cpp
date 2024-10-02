@@ -9,6 +9,19 @@
 
 #include "Server.hpp"
 #include "json_fwd.hpp"
+#include "CommandExecutor.hpp"
+
+void writeError(int clientFd, const std::string& message) {
+    std::string errorMessage = "{\"error\": \"" + message + "\"}";
+    write(clientFd, errorMessage.c_str(), errorMessage.size());
+    close(clientFd);
+}
+
+void writeResponse(int clientFd, const nlohmann::json& response) {
+    std::string responseString = response.dump();
+    write(clientFd, responseString.c_str(), responseString.size());
+    close(clientFd);
+}
 
 void handleClient(int clientFd) {
     char buffer[1024];
@@ -22,10 +35,32 @@ void handleClient(int clientFd) {
     std::cout << "Received message: " << std::string(buffer, bytesRead) << std::endl;
 
     //parse the message as JSON
-    nlohmann::json json = nlohmann::json::parse(std::string(buffer, bytesRead));
+    nlohmann::json json;
 
-    //print the JSON
+    try {
+        json = nlohmann::json::parse(std::string(buffer, bytesRead));
+    } catch (const nlohmann::json::parse_error& e) {
+        writeError(clientFd, "Failed to parse JSON");
+        return;
+    }
+
     std::cout << json.dump(4) << std::endl;
+
+    // Check if the JSON object has a "command" field
+    if (!json.contains("command")) {
+        writeError(clientFd, "Missing 'command' field");
+        return;
+    }
+
+    std::string command = json["command"];
+    //also get an optional object parameters
+    nlohmann::json parameters;
+    if (json.contains("parameters")) {
+        parameters = json["parameters"];
+    }
+
+    // Execute the command
+    ExecuteCommand(clientFd, command, parameters);
 
     close(clientFd);
 }
