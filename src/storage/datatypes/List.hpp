@@ -3,13 +3,18 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <memory>
+
 
 
 #include "Datatype.hpp"
+#include "Iterable.hpp"
 
-class List : public DataType {
+class List : public DataType , public Iterable {
 public:
     List(std::list<std::shared_ptr<DataType>> value) : value(value) {}
+    //empty list constructor to just initialize the list
+    List() : value(std::list<std::shared_ptr<DataType>>()) {}
 
     std::list<std::shared_ptr<DataType>> get_value() const {
         return value;
@@ -21,6 +26,28 @@ public:
 
     DataTypeType get_type() const override {
         return DataTypeType::LIST;
+    }
+
+    std::shared_ptr<DataType> get(int index) override {
+        if (index < 0 || index >= value.size()) {
+            return nullptr;
+        }
+        auto it = value.begin();
+        std::advance(it, index);
+        return *it;
+    }
+
+    void set(int index, std::shared_ptr<DataType> value) override {
+        if (index < 0 || index >= this->value.size()) {
+            return;
+        }
+        auto it = this->value.begin();
+        std::advance(it, index);
+        *it = value;
+    }
+
+    int size() override {
+        return value.size();
     }
 
     std::string to_string() const override {
@@ -118,4 +145,8 @@ private:
 
 inline std::shared_ptr<DataType> createList(std::list<std::shared_ptr<DataType>> value) {
     return std::make_shared<List>(value);
+}
+
+inline std::shared_ptr<DataType> createEmptyList() {
+    return std::make_shared<List>();
 }

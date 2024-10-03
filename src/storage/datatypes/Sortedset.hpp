@@ -11,6 +11,7 @@
 class Sortedset : public DataType {
 public:
     Sortedset(std::set<std::shared_ptr<DataType>> value) : value(value) {}
+    Sortedset() : value(std::set<std::shared_ptr<DataType>>()) {}
 
     std::set<std::shared_ptr<DataType>> get_value() const {
         return value;

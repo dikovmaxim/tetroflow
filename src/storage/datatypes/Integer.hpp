@@ -2,6 +2,12 @@
 
 #include "Datatype.hpp"
 
+#include <memory>
+#include <vector>
+#include <string>
+
+
+
 class Integer : public DataType {
 public:
     Integer(int value) : value(value) {}

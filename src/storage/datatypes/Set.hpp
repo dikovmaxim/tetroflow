@@ -10,6 +10,7 @@
 class Set : public DataType {
 public:
     Set(std::unordered_set<std::shared_ptr<DataType>> value) : value(value) {}
+    Set() : value(std::unordered_set<std::shared_ptr<DataType>>()) {}
 
     std::unordered_set<std::shared_ptr<DataType>> get_value() const {
         return value;
@@ -61,6 +62,8 @@ public:
     ~Set(){
         value.clear();
     }
+
+
 
 private:
     std::unordered_set<std::shared_ptr<DataType>> value;

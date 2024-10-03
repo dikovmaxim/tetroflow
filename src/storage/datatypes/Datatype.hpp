@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 
 enum class DataTypeType {
@@ -30,4 +31,8 @@ public:
 
     virtual ~DataType() = default;
 };
+
+std::shared_ptr<DataType> from_string(std::string str, std::string type);
+
+
 #endif //DATATYPE_HPP
