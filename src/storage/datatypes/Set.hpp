@@ -28,9 +28,11 @@ public:
         for (auto it = value.begin(); it != value.end(); it++) {
             str += (*it)->to_string();
             if (it != value.end()) {
-                str += ", ";
+                str += ",";
             }
         }
+        // remove last comma
+        if (str.length() > 1) str.pop_back();
         str += "}";
         return str;
     }
@@ -56,6 +58,19 @@ public:
         return members;
     }
 
+    ~Set(){
+        value.clear();
+    }
+
 private:
     std::unordered_set<std::shared_ptr<DataType>> value;
 };
+
+//inline function with ... parameters
+inline std::shared_ptr<Set> createSet(std::vector<std::shared_ptr<DataType>> values) {
+    std::unordered_set<std::shared_ptr<DataType>> set;
+    for (auto it = values.begin(); it != values.end(); it++) {
+        set.insert(*it);
+    }
+    return std::make_shared<Set>(set);
+}

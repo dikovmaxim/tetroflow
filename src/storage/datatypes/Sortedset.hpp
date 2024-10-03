@@ -74,6 +74,10 @@ public:
         return value.size();
     }
 
+    ~Sortedset(){
+        value.clear();
+    }
+
 private:
     std::set<std::shared_ptr<DataType>> value;
 };

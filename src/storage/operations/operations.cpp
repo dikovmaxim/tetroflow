@@ -35,6 +35,8 @@ namespace operations {
         return table->get(key);
     }
 
+    
+
     bool exists(Table* table, const uint32_t key) {
         return table->exists(key);
     }
@@ -323,6 +325,6 @@ namespace operations {
         return sqrt(pow(lat1 - lat2, 2) + pow(lng1 - lng2, 2));
     }
 
-    
+
 
 }

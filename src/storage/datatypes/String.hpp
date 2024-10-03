@@ -31,3 +31,7 @@ public:
 private:
     std::string value;
 };
+
+inline std::shared_ptr<DataType> createString(std::string value) {
+    return std::make_shared<String>(value);
+}

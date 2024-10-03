@@ -27,3 +27,7 @@ public:
 private:
     float value;
 };
+
+std::shared_ptr<DataType> createFloat(float value) {
+    return std::make_shared<Float>(value);
+}

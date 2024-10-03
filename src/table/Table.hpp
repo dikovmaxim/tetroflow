@@ -23,4 +23,8 @@ public:
     ~Table();
     bool exists(uint32_t key);
     std::shared_ptr<DataType> get(uint32_t key);
+    void set(uint32_t key, std::shared_ptr<DataType> value);
+    void remove(uint32_t key);
+
+    void print();
 };

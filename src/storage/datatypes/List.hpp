@@ -107,7 +107,15 @@ public:
         }
     }
 
+    ~List(){
+        value.clear();
+    }
+
 
 private:
     std::list<std::shared_ptr<DataType>> value;
 };
+
+inline std::shared_ptr<DataType> createList(std::list<std::shared_ptr<DataType>> value) {
+    return std::make_shared<List>(value);
+}

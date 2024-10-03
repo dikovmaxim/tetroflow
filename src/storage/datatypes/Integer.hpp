@@ -43,3 +43,7 @@ public:
 private:
     int value;
 };
+
+inline std::shared_ptr<DataType> createInteger(int value) {
+    return std::make_shared<Integer>(value);
+}

@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <tuple>
 #include <memory>
+#include <iostream>
 
 
 #include "Table.hpp"
@@ -36,4 +37,21 @@ std::shared_ptr<DataType> Table::get(uint32_t key) {
         throw std::invalid_argument("Key does not exist");
     }
     return hashmap[key];
+}
+
+void Table::set(uint32_t key, std::shared_ptr<DataType> value) {
+    hashmap[key] = value;
+}
+
+void Table::remove(uint32_t key) {
+    if (!exists(key)) {
+        throw std::invalid_argument("Key does not exist");
+    }
+    hashmap.erase(key);
+}
+
+void Table::print() {
+    for (auto const& [key, val] : hashmap) {
+        std::cout << key << ": " << val->to_string() << std::endl;
+    }
 }
