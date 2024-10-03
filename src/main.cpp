@@ -11,14 +11,14 @@
 
 #include "Global.hpp"
 #include "server/Server.hpp"
+#include "log/Logger.hpp"
 
 
 int main(int argc, char** argv) {
 
     initStorage();
-
-    std::string socketPath = "/tmp/test_socket";
-    startServer(socketPath);
+    
+    while (true) {}
 
 
     return 0;

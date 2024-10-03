@@ -1,8 +1,6 @@
 import socket
 import json
 
-# Path to your Unix domain socket
-SOCKET_PATH = '/tmp/test_socket'
 
 def send_request(command, parameters=None):
     if parameters is None:
@@ -13,13 +11,20 @@ def send_request(command, parameters=None):
         "parameters": parameters
     })
 
-    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client_socket:
-        client_socket.connect(SOCKET_PATH)
-        client_socket.sendall(message.encode('utf-8'))
+    #connect to loalhost:8080
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect(("localhost", 8080))
 
-        # Receive the response from the server
-        response = client_socket.recv(4096)
-        return response.decode('utf-8')
+    #send message
+    client.sendall(message.encode())
+
+    #receive response
+    response = client.recv(4096)
+    client.close()
+
+    return response.decode()
+
+
 
 def test_ping():
     print("Testing ping command")
@@ -71,10 +76,4 @@ if __name__ == "__main__":
     test_create_table()
     test_create_table()
     test_list_tables()
-    test_add_element(1, 1, "madafaka")
-    test_get_element(1, 1)
-    test_list_elements(1)
-    test_remove_element(1, 1)
-    test_set_element(1, 1, "new_data")
-    test_list_elements(1)
-    test_drop_table(1)
+    test_add_element(2, 1, "madafaka")

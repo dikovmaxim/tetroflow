@@ -1,6 +1,9 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
 
+#include <vector>
+#include <string>
+
 #define TABLE_INITIAL_SIZE 30
 
 #include "storage/Storage.hpp"
@@ -10,5 +13,7 @@ extern Storage* storage;
 
 // Declare the initStorage function
 void initStorage();
+
+
 
 #endif // GLOBAL_HPP
