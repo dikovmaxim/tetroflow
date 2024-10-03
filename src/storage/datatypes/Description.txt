@@ -1,0 +1,55 @@
+
+Datatypes and operations able to perform on them
+
+Operations able to perform on datatypes
+
+GET <key:uint32> - Get the value of a key
+EXISTS <key:uint32> - Check if a key exists
+
+String Operations
+APPEND <key:uint32> <value:string> - Append the value to the key
+STRLEN <key:uint32> - Get the length of the value of a key
+GETRANGE <key:uint32> <start:uint32> <end:uint32> - Get the substring of the value of a key
+
+List Operations
+LPUSH <key:uint32> <value:DATATYPE> - Push the value to the left of the list
+RPUSH <key:uint32> <value:DATATYPE> - Push the value to the right of the list
+LPOP <key:uint32> - Pop the value from the left of the list
+RPOP <key:uint32> - Pop the value from the right of the list
+LINDEX <key:uint32> <index:uint32> - Get the value at the index of the list
+LLEN <key:uint32> - Get the length of the list
+LSET <key:uint32> <index:uint32> <value:DATATYPE> - Set the value at the index of the list
+LINS <key:uint32> <index:uint32> <value:DATATYPE> - Insert the value at the index of the list
+LREM <key:uint32> <index:uint32> - Remove the value at the index of the list
+
+Set Operations
+SADD <key:uint32> <value:DATATYPE> - Add the value to the set
+SREM <key:uint32> <value:DATATYPE> - Remove the value from the set
+SMEMBERS <key:uint32> - Get all the members of the set
+SISMEMBER <key:uint32> <value:DATATYPE> - Check if the value is a member of the set
+
+Integer Operations
+INCR <key:uint32> - Increment the value of the key by 1
+DECR <key:uint32> - Decrement the value of the key by 1
+INCRBY <key:uint32> <value:int> - Increment the value of the key by the value
+DECRBY <key:uint32> <value:int> - Decrement the value of the key by the value
+
+Float Operations
+SET <key:uint32> <value:float> - Set the value of the key
+
+Sorted Set Operations
+ZADD <key:uint32> <score:float> <value:DATATYPE> - Add the value to the sorted set with the score
+ZREM <key:uint32> <value:DATATYPE> - Remove the value from the sorted set
+ZRANGE <key:uint32> <start:uint32> <end:uint32> - Get the values in the range of the sorted set
+ZREVRANGE <key:uint32> <start:uint32> <end:uint32> - Get the values in the reverse range of the sorted set
+ZCARD <key:uint32> - Get the number of members in the sorted set
+
+Geo Operations
+GEODIST <key:uint32> <key2:uint32> - Get the distance between the geolocations of the keys
+
+
+Bitmap Operations
+SETBIT <key:uint32> <offset:uint32> <value:bool> - Set the bit at the offset of the key
+GETBIT <key:uint32> <offset:uint32> - Get the bit at the offset of the key
+BITCOUNT <key:uint32> - Get the number of set bits in the key
+BITPOS <key:uint32> <bit:uint32> - Get the position of the first set bit or unset bit in the key

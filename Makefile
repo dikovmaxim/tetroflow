@@ -14,9 +14,10 @@ OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 # Name of the final executable
 TARGET = app
 
-# Default rule
-all: $(TARGET)
+# Default rule, first clean up the build and target, then build the target
+all: clean compile
 
+compile: $(TARGET)
 # Rule to link object files into the final executable
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^

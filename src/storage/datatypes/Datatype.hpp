@@ -1,15 +1,14 @@
-#pragma once
+#ifndef DATATYPE_HPP
+#define DATATYPE_HPP
 
 #include <string>
+#include <vector>
+
 
 enum class DataTypeType {
     STRING = 0,
     INTEGER = 1,
     FLOAT = 2,
-    BOOLEAN = 3,
-    DATE = 4,
-    TIME = 5,
-    DATETIME = 6,
     BITMAP = 7,
     LIST = 8,
     SET = 9,
@@ -18,14 +17,17 @@ enum class DataTypeType {
     GEO = 12,
 };
 
+std::string DataTypeType_to_string(DataTypeType type);
+std::string bytesToString(const std::vector<std::byte>& bytes);
+std::string base64_encode(const std::vector<std::byte>& bytes);
+
 class DataType {
-
 public:
-
-    std::string to_string() const;
+    // Make this a virtual method and pure virtual (= 0)
+    virtual std::string to_string() const = 0;
 
     virtual DataTypeType get_type() const = 0;
 
     virtual ~DataType() = default;
-
 };
+#endif //DATATYPE_HPP
