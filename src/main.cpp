@@ -29,8 +29,35 @@
 #include "dml/parser.hpp"
 
 #include "storage/datatypes/Iterable.hpp"
+#include "storage/operations/operations.hpp"
 
 Table* table;
+
+std::tuple<std::vector<int>, std::shared_ptr<DataType>> followIndexChain(std::vector<int> indexChain) {
+        
+    if (indexChain.size() < 2) {
+        throw std::invalid_argument("SET command requires at least 2 parts in the index chain");
+    }
+    //get the table key
+    uint32_t tableKey = indexChain[0];
+
+    //get the index key
+    uint32_t indexKey = indexChain[1];
+
+    std::vector<int> subIndexChain = std::vector<int>(indexChain.begin() + 2, indexChain.end());
+
+    std::shared_ptr<DataType> currrentObject = table->get(indexKey);
+
+    for (int i = 0; i < subIndexChain.size() - 1; i++) {
+        if (std::dynamic_pointer_cast<Iterable>(currrentObject) != nullptr) {
+            currrentObject = std::dynamic_pointer_cast<Iterable>(currrentObject)->get(subIndexChain[i]);
+        } else {
+            throw std::invalid_argument("Object " +DataTypeType_to_string(currrentObject->get_type())+ " is not iterable");
+        }
+    }
+
+    return std::make_tuple(subIndexChain, currrentObject);
+}
 
 void runCommand(Command command) {
 
@@ -39,29 +66,20 @@ void runCommand(Command command) {
     std::vector<std::string> types = command.types;
     std::vector<std::string> values = command.values;
 
+    table->print();
 
     if (commandName == "GET") {
-        //if less than 2 parts of chain (table key and index key), throw error
-        if (indexChain.size() < 2) {
-            throw std::invalid_argument("SET command requires at least 2 parts in the index chain");
-        }
 
-        //get the table key
-        uint32_t tableKey = indexChain[0];
+        //get the object
+        std::shared_ptr<DataType> currrentObject;
+        std::vector<int> subIndexChain;
+        try {
 
-        //get the index key
-        uint32_t indexKey = indexChain[1];
+            std::tie(subIndexChain, currrentObject) = followIndexChain(indexChain);
 
-        std::vector<int> subIndexChain = std::vector<int>(indexChain.begin() + 2, indexChain.end());
-
-        std::shared_ptr<DataType> currrentObject = table->get(indexKey);
-
-        for (int i = 0; i < subIndexChain.size(); i++) {
-            if (std::dynamic_pointer_cast<Iterable>(currrentObject) != nullptr) {
-                currrentObject = std::dynamic_pointer_cast<Iterable>(currrentObject)->get(subIndexChain[i]);
-            } else {
-                throw std::invalid_argument("Object " +DataTypeType_to_string(currrentObject->get_type())+ " is not iterable");
-            }
+        } catch (std::invalid_argument& e) {
+            log(LOG_ERROR, e.what());
+            return;
         }
         
         // Print the final object value
@@ -76,27 +94,18 @@ void runCommand(Command command) {
 
 
     if (commandName == "SET") {
-        //if less than 2 parts of chain (table key and index key), throw error
-        if (indexChain.size() < 2) {
-            throw std::invalid_argument("SET command requires at least 2 parts in the index chain");
-        }
 
-        //get the table key
-        uint32_t tableKey = indexChain[0];
+        //get the object
+        std::shared_ptr<DataType> currrentObject;
+        std::vector<int> subIndexChain;
 
-        //get the index key
-        uint32_t indexKey = indexChain[1];
+        try {
 
-        std::vector<int> subIndexChain = std::vector<int>(indexChain.begin() + 2, indexChain.end());
-
-        std::shared_ptr<DataType> currrentObject = table->get(indexKey);
-
-        for (int i = 0; i < subIndexChain.size() - 1; i++) {
-            if (std::dynamic_pointer_cast<Iterable>(currrentObject) != nullptr) {
-                currrentObject = std::dynamic_pointer_cast<Iterable>(currrentObject)->get(subIndexChain[i]);
-            } else {
-                throw std::invalid_argument("Object " +DataTypeType_to_string(currrentObject->get_type())+ " is not iterable");
-            }
+            std::tie(subIndexChain, currrentObject) = followIndexChain(indexChain);
+            
+        } catch (std::invalid_argument& e) {
+            log(LOG_ERROR, e.what());
+            return;
         }
 
         //check if there is at least one parameter
@@ -106,11 +115,39 @@ void runCommand(Command command) {
 
         // Set the value to the object
         std::shared_ptr<DataType> value = from_string(values[0], types[0]);
+        std::cout << "Value: " << value->to_string() << std::endl;
+
         if (std::dynamic_pointer_cast<Iterable>(currrentObject) != nullptr) {
             std::dynamic_pointer_cast<Iterable>(currrentObject)->set(subIndexChain[subIndexChain.size() - 1], value);
         } else {
             throw std::invalid_argument("Object " +DataTypeType_to_string(currrentObject->get_type())+ " is not iterable");
         }
+
+        return;
+    }
+
+    //string operations
+    if (commandName == "APPEND") {
+
+        //get the object
+        std::shared_ptr<DataType> currrentObject;
+        std::vector<int> subIndexChain;
+
+        try {
+
+            std::tie(subIndexChain, currrentObject) = followIndexChain(indexChain);
+            
+        } catch (std::invalid_argument& e) {
+            log(LOG_ERROR, e.what());
+            return;
+        }
+
+        //check if there is at least one parameter
+        if (values.size() < 1) {
+            throw std::invalid_argument("APPEND command requires at least one parameter");
+        }
+
+
 
         return;
     }
@@ -143,23 +180,20 @@ int main(int argc, char** argv) {
     std::shared_ptr<DataType> value7 = createList(std::list<std::shared_ptr<DataType>>{value, value2, value3, value4, value5, value6});
     table->set(0, value7);
 
-
-
-    table->print();
-
-
-
     std::vector<std::string> commands = {
-        "SET db[0].key[0].key[4] \"Hello World\"",
+        "SET db[0].key[0].key[4] []",
+        "APPEND db[0].key[0] \" There, motherfucker!\""
     };
 
     for (const auto& cmd : commands) {
         CommandParser parser(cmd);
-        parser.printCommand();
         runCommand(parser.getCommand());
+        //print the command
+        //parser.printCommand();
     }
 
     table->print();
+
 
 
     return 0;

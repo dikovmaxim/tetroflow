@@ -30,7 +30,7 @@ public:
 
     std::shared_ptr<DataType> get(int index) override {
         if (index < 0 || index >= value.size()) {
-            return nullptr;
+            throw std::invalid_argument("Index out of bounds");
         }
         auto it = value.begin();
         std::advance(it, index);
@@ -39,11 +39,12 @@ public:
 
     void set(int index, std::shared_ptr<DataType> value) override {
         if (index < 0 || index >= this->value.size()) {
-            return;
+            throw std::invalid_argument("Index out of bounds");
         }
+        std::shared_ptr<DataType> newValue = value;
         auto it = this->value.begin();
         std::advance(it, index);
-        *it = value;
+        *it = newValue;
     }
 
     int size() override {
