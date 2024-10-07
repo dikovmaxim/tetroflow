@@ -26,14 +26,14 @@ public:
     }
 
     std::string to_string() const override {
-        std::string str = "{";
+        std::string str = "[";
         for (auto it = value.begin(); it != value.end(); it++) {
             str += (*it)->to_string();
             if (it != value.end()) {
                 str += ", ";
             }
         }
-        str += "}";
+        str += "]";
         return str;
     }
 

@@ -29,7 +29,7 @@ public:
     }
 
     std::string to_string() const override {
-        std::string str = "{";
+        std::string str = "[";
         for (auto it = value.begin(); it != value.end(); it++) {
             str += (*it)->to_string();
             if (it != value.end()) {
@@ -38,7 +38,7 @@ public:
         }
         // remove last comma
         if (str.length() > 1) str.pop_back();
-        str += "}";
+        str += "]";
         return str;
     }
 

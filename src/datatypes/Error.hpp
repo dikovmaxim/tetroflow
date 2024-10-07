@@ -4,9 +4,9 @@
 
 #include "Datatype.hpp"
 
-class Response : public DataType {
+class Error : public DataType {
 public:
-    Response(std::string value) : value(value) {}
+    Error(std::string value) : value(value) {}
 
     std::string get_value() const {
         return value;
@@ -21,12 +21,14 @@ public:
     }
 
     std::string to_string() const override {
-        return "{\"response\":\"" + value + "\"}";
+        return "{\"error\": \"" + value + "\"}";
     }
+
+
 private:
     std::string value;
 };
 
-inline std::shared_ptr<DataType> createResponse(std::string value) {
-    return std::make_shared<Response>(value);
+inline std::shared_ptr<DataType> make_error(std::string value) {
+    return std::make_shared<Error>(value);
 }

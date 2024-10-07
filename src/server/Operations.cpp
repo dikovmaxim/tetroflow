@@ -1,10 +1,11 @@
 #include "Operations.hpp"
 #include "../datatypes/Datatype.hpp"
 #include "../table/Table.hpp"
-#include "../datatypes/Response.hpp"
 #include "../datatypes/Boolean.hpp"
 #include "../datatypes/List.hpp"
 #include "../datatypes/Integer.hpp"
+#include "../datatypes/String.hpp"
+#include "../datatypes/Error.hpp"
 
 namespace operations {
     
@@ -19,7 +20,7 @@ namespace operations {
 
     std::shared_ptr<DataType> del(std::shared_ptr<Table> table, int key) {
         table->remove(key);
-        return createResponse("Key deleted");
+        return createString("OK");
     }
 
     std::shared_ptr<DataType> exists(std::shared_ptr<Table> table, int key) {
@@ -37,10 +38,10 @@ namespace operations {
 
     std::shared_ptr<DataType> type(std::shared_ptr<Table> table, int key) {
         if (!table->exists(key)) {
-            return createResponse("Key does not exist");
+            return make_error("Key does not exist");
         }
         std::shared_ptr<DataType> value = table->get(key);
-        return createResponse(DataTypeType_to_string(value->get_type()));
+        return createString(DataTypeType_to_string(value->get_type()));
     }
     
 }

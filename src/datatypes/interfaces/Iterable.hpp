@@ -10,4 +10,3 @@ public:
     virtual void set(int index, std::shared_ptr<DataType> value) = 0;
     virtual int size() = 0;
 };
- 
