@@ -51,7 +51,32 @@ namespace operations {
     }
 
     
+    namespace dataset {
 
-    
+        std::shared_ptr<DataType> sadd(std::shared_ptr<Table> table, int key, std::shared_ptr<DataType> value);
+
+        std::shared_ptr<DataType> srem(std::shared_ptr<Table> table, int key, std::shared_ptr<DataType> value);
+
+        std::shared_ptr<DataType> smembers(std::shared_ptr<Table> table, int key);
+
+        std::shared_ptr<DataType> sismember(std::shared_ptr<Table> table, int key, std::shared_ptr<DataType> value);
+
+        std::shared_ptr<DataType> scard(std::shared_ptr<Table> table, int key);
+
+    }
+
+    namespace sortedset {
+
+        std::shared_ptr<DataType> zadd(std::shared_ptr<Table> table, int key, std::shared_ptr<DataType> value, float score);
+
+        std::shared_ptr<DataType> zrem(std::shared_ptr<Table> table, int key, std::shared_ptr<DataType> value);
+
+        std::shared_ptr<DataType> zrange(std::shared_ptr<Table> table, int key, int start, int end);
+
+        std::shared_ptr<DataType> zrevrange(std::shared_ptr<Table> table, int key, int start, int end);
+
+        std::shared_ptr<DataType> zcard(std::shared_ptr<Table> table, int key);
+
+    }
 
 }

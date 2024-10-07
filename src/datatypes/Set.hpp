@@ -54,13 +54,8 @@ public:
         return this->value.find(value) != this->value.end();
     }
 
-    std::vector<std::shared_ptr<DataType>> smembers() {
-        std::vector<std::shared_ptr<DataType>> members;
-        for (auto it = value.begin(); it != value.end(); it++) {
-            std::shared_ptr<DataType> member = *it;
-            members.push_back(member);
-        }
-        return members;
+    int scard() {
+        return value.size();
     }
 
     ~Set(){

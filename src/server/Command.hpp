@@ -14,12 +14,15 @@ enum CommandType {
     GET,
     SET,
     DEL,
+    CAST,
     EXISTS,
     KEYS,
     TYPE,
+
     APPEND,
     STRLEN,
     GETRANGE,
+
     LPUSH,
     RPUSH,
     LPOP,
@@ -28,7 +31,16 @@ enum CommandType {
     LSET,
     LINSERT,
     LREM,
-    CAST,
+    
+    SADD,
+    SREM,
+    SCARD,
+
+    ZADD,
+    ZREM,
+    ZRANGE,
+    ZREVRANGE,
+    ZCARD,
 
     INVALID
 };
@@ -50,9 +62,12 @@ inline CommandType stringToCommandType(std::string type){
     if (type == "EXISTS") return CommandType::EXISTS;
     if (type == "KEYS") return CommandType::KEYS;
     if (type == "TYPE") return CommandType::TYPE;
+    if (type == "CAST") return CommandType::CAST;
+
     if (type == "APPEND") return CommandType::APPEND;
     if (type == "STRLEN") return CommandType::STRLEN;
     if (type == "GETRANGE") return CommandType::GETRANGE;
+
     if (type == "LPUSH") return CommandType::LPUSH;
     if (type == "RPUSH") return CommandType::RPUSH;
     if (type == "LPOP") return CommandType::LPOP;
@@ -61,8 +76,16 @@ inline CommandType stringToCommandType(std::string type){
     if (type == "LSET") return CommandType::LSET;
     if (type == "LINSERT") return CommandType::LINSERT;
     if (type == "LREM") return CommandType::LREM;
-    if (type == "CAST") return CommandType::CAST;
-    
+
+    if (type == "SADD") return CommandType::SADD;
+    if (type == "SREM") return CommandType::SREM;
+    if (type == "SCARD") return CommandType::SCARD;
+
+    if (type == "ZADD") return CommandType::ZADD;
+    if (type == "ZREM") return CommandType::ZREM;
+    if (type == "ZRANGE") return CommandType::ZRANGE;
+    if (type == "ZREVRANGE") return CommandType::ZREVRANGE;
+    if (type == "ZCARD") return CommandType::ZCARD;
 
     return CommandType::INVALID;
 }

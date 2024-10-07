@@ -277,6 +277,92 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             return result;
         }
 
+        case CommandType::SADD: {
+            int keyInt;
+            try {
+                keyInt = command.args.at("key");
+                return operations::dataset::sadd(table, keyInt, JsonToDataType(command.args.at("value")));
+            } catch (const std::exception& e) {
+                return make_error("Invalid key or value");
+            }
+        }
+
+        case CommandType::SREM: {
+            int keyInt;
+            try {
+                keyInt = command.args.at("key");
+                return operations::dataset::srem(table, keyInt, JsonToDataType(command.args.at("value")));
+            } catch (const std::exception& e) {
+                return make_error("Invalid key or value");
+            }
+        }
+
+        case CommandType::SCARD: {
+            int keyInt;
+            try {
+                keyInt = command.args.at("key");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key");
+            }
+            return operations::dataset::scard(table, keyInt);
+        }
+
+        case CommandType::ZADD: {
+            int keyInt;
+            float score;
+            try {
+                keyInt = command.args.at("key");
+                score = command.args.at("score");
+                return operations::sortedset::zadd(table, keyInt, JsonToDataType(command.args.at("value")), score);
+            } catch (const std::exception& e) {
+                return make_error("Invalid key, value or score");
+            }
+        }
+
+        case CommandType::ZREM: {
+            int keyInt;
+            try {
+                keyInt = command.args.at("key");
+                return operations::sortedset::zrem(table, keyInt, JsonToDataType(command.args.at("value")));
+            } catch (const std::exception& e) {
+                return make_error("Invalid key or value");
+            }
+        }
+
+        case CommandType::ZRANGE: {
+            int keyInt, start, end;
+            try {
+                keyInt = command.args.at("key");
+                start = command.args.at("start");
+                end = command.args.at("end");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key or range");
+            }
+            return operations::sortedset::zrange(table, keyInt, start, end);
+        }
+
+        case CommandType::ZREVRANGE: {
+            int keyInt, start, end;
+            try {
+                keyInt = command.args.at("key");
+                start = command.args.at("start");
+                end = command.args.at("end");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key or range");
+            }
+            return operations::sortedset::zrevrange(table, keyInt, start, end);
+        }
+
+        case CommandType::ZCARD: {
+            int keyInt;
+            try {
+                keyInt = command.args.at("key");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key");
+            }
+            return operations::sortedset::zcard(table, keyInt);
+        }
+
 
 
     }
