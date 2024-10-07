@@ -79,4 +79,21 @@ namespace operations {
 
     }
 
+    namespace integer {
+
+        std::shared_ptr<DataType> inc(std::shared_ptr<Table> table, int key);
+
+        std::shared_ptr<DataType> dec(std::shared_ptr<Table> table, int key);
+
+        std::shared_ptr<DataType> incby(std::shared_ptr<Table> table, int key, int increment);
+
+        std::shared_ptr<DataType> decby(std::shared_ptr<Table> table, int key, int decrement);
+
+    }
+
+    namespace boolean {
+
+        std::shared_ptr<DataType> flip(std::shared_ptr<Table> table, int key);
+    }
+
 }

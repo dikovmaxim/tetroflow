@@ -24,6 +24,11 @@ public:
         return value ? "true" : "false";
     }
 
+    bool flip() {
+        value = !value;
+        return value;
+    }
+
 private:
     bool value;
 };

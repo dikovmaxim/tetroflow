@@ -363,6 +363,59 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             return operations::sortedset::zcard(table, keyInt);
         }
 
+        case CommandType::INC: {
+            std::cout << command.args << std::endl;
+            int keyInt;
+            try {
+                keyInt = command.args.at("key");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key");
+            }
+            return operations::integer::inc(table, keyInt);
+        }
+
+        case CommandType::DEC: {
+            int keyInt;
+            try {
+                keyInt = command.args.at("key");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key");
+            }
+            return operations::integer::dec(table, keyInt);
+        }
+
+        case CommandType::INCBY: {
+            int keyInt, increment;
+            try {
+                keyInt = command.args.at("key");
+                increment = command.args.at("increment");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key or increment");
+            }
+            return operations::integer::incby(table, keyInt, increment);
+        }
+
+        case CommandType::DECBY: {
+            int keyInt, decrement;
+            try {
+                keyInt = command.args.at("key");
+                decrement = command.args.at("decrement");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key or decrement");
+            }
+            return operations::integer::decby(table, keyInt, decrement);
+        }
+
+        case CommandType::FLIP: {
+            int keyInt;
+            try {
+                keyInt = command.args.at("key");
+            } catch (const std::exception& e) {
+                return make_error("Invalid key");
+            }
+            return operations::boolean::flip(table, keyInt);
+        }
+
 
 
     }

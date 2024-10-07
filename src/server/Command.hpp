@@ -42,6 +42,14 @@ enum CommandType {
     ZREVRANGE,
     ZCARD,
 
+    INC,
+    DEC,
+    INCBY,
+    DECBY,
+
+    FLIP,
+
+
     INVALID
 };
 
@@ -86,6 +94,13 @@ inline CommandType stringToCommandType(std::string type){
     if (type == "ZRANGE") return CommandType::ZRANGE;
     if (type == "ZREVRANGE") return CommandType::ZREVRANGE;
     if (type == "ZCARD") return CommandType::ZCARD;
+
+    if (type == "INC") return CommandType::INC;
+    if (type == "DEC") return CommandType::DEC;
+    if (type == "INCBY") return CommandType::INCBY;
+    if (type == "DECBY") return CommandType::DECBY;
+
+    if (type == "FLIP") return CommandType::FLIP;
 
     return CommandType::INVALID;
 }
