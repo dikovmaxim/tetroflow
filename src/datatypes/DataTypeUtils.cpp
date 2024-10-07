@@ -46,6 +46,8 @@ std::string DataTypeType_to_string(DataTypeType type) {
             return "HASH";
         case DataTypeType::GEO:
             return "GEO";
+        case DataTypeType::RESPONSE:
+            return "RESPONSE";
     }
     return "UNKNOWN";
 }

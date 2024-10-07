@@ -11,6 +11,7 @@
 
 
 #include "Table.hpp"
+#include "../datatypes/Datatype.hpp"
 
 Table::Table(uint32_t initialSize){
     hashmap.reserve(initialSize);
@@ -50,8 +51,27 @@ void Table::remove(uint32_t key) {
     hashmap.erase(key);
 }
 
+std::vector<uint32_t> Table::getKeys() {
+    std::vector<uint32_t> keys;
+    for (auto const& [key, val] : hashmap) {
+        keys.push_back(key);
+    }
+    return keys;
+}
+
 void Table::print() {
     for (auto const& [key, val] : hashmap) {
         std::cout << key << ": " << val->to_string() << std::endl;
     }
+}
+
+void Table::printBeautify() {
+    printf("Table:\n");
+    printf("--------------------\n");
+    printf("Key\tValue\tType\n");
+    printf("--------------------\n");
+    for (auto const& [key, val] : hashmap) {
+        printf("%d\t%s\t%s\n", key, val->to_string().c_str(), DataTypeType_to_string(val->get_type()).c_str());
+    }
+    printf("--------------------\n");
 }

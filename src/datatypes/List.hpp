@@ -6,36 +6,36 @@
 #include <memory>
 
 
-
 #include "Datatype.hpp"
-#include "Iterable.hpp"
+#include "interfaces/Iterable.hpp"
 
 class List : public DataType , public Iterable {
 public:
+
+    //Constructors
+
     List(std::list<std::shared_ptr<DataType>> value) : value(value) {}
-    //empty list constructor to just initialize the list
     List() : value(std::list<std::shared_ptr<DataType>>()) {}
 
-    std::list<std::shared_ptr<DataType>> get_value() const {
-        return value;
-    }
-
-    void set_value(std::list<std::shared_ptr<DataType>> value) {
-        this->value = value;
-    }
+    //Datatype interface methods
 
     DataTypeType get_type() const override {
         return DataTypeType::LIST;
     }
 
-    std::shared_ptr<DataType> get(int index) override {
-        if (index < 0 || index >= value.size()) {
-            throw std::invalid_argument("Index out of bounds");
+    std::string to_string() const override {
+        std::string str = "[";
+        for (auto it = value.begin(); it != value.end(); it++) {
+            str += (*it)->to_string();
+            if (std::next(it) != value.end()) {
+                str += ",";
+            }
         }
-        auto it = value.begin();
-        std::advance(it, index);
-        return *it;
+        str += "]";
+        return str;
     }
+
+    //Iterable interface methods
 
     void set(int index, std::shared_ptr<DataType> value) override {
         if (index < 0 || index >= this->value.size()) {
@@ -47,20 +47,27 @@ public:
         *it = newValue;
     }
 
+    std::shared_ptr<DataType> get(int index) override {
+        if (index < 0 || index >= value.size()) {
+            throw std::invalid_argument("Index out of bounds");
+        }
+        auto it = value.begin();
+        std::advance(it, index);
+        return *it;
+    }
+
     int size() override {
         return value.size();
     }
 
-    std::string to_string() const override {
-        std::string str = "[";
-        for (auto it = value.begin(); it != value.end(); it++) {
-            str += (*it)->to_string();
-            if (it != value.end()) {
-                str += ", ";
-            }
-        }
-        str += "]";
-        return str;
+    //List methods
+
+    std::list<std::shared_ptr<DataType>> get_value() const {
+        return value;
+    }
+
+    void set_value(std::list<std::shared_ptr<DataType>> value) {
+        this->value = value;
     }
 
     void lpush(std::shared_ptr<DataType> value) {
