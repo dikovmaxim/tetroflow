@@ -46,6 +46,22 @@ int main(int argc, char** argv) {
     command = jsonToCommand("{\"command\": \"GET\",\"key\": 1}");
     test = executeCommand(command, coreTable);
 
+    //exists index 1
+    command = jsonToCommand("{\"command\": \"EXISTS\",\"key\": 1}");
+    test = executeCommand(command, coreTable);
+
+    std::cout << test->to_string() << std::endl;
+
+    //get keys
+    command = jsonToCommand("{\"command\": \"KEYS\"}");
+    test = executeCommand(command, coreTable);
+
+    std::cout << test->to_string() << std::endl;
+
+    //get type
+    command = jsonToCommand("{\"command\": \"TYPE\",\"key\": 1}");
+    test = executeCommand(command, coreTable);
+
     std::cout << test->to_string() << std::endl;
 
     return 0;

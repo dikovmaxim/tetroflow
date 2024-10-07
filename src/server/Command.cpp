@@ -125,6 +125,31 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             }
             return operations::del(table, keyInt);
         }
+
+        case CommandType::EXISTS: {
+            int keyInt;
+            try {
+                keyInt = j["key"];
+            } catch (std::invalid_argument& e) {
+                return createResponse("Invalid key");
+            }
+            return operations::exists(table, keyInt);
+        }
+
+        case CommandType::KEYS: {
+            return operations::keys(table);
+        }
+
+        case CommandType::TYPE: {
+            int keyInt;
+            try {
+                keyInt = j["key"];
+            } catch (std::invalid_argument& e) {
+                return createResponse("Invalid key");
+            }
+            return operations::type(table, keyInt);
+        }
+
         default:
             break;
     }

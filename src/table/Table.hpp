@@ -26,6 +26,7 @@ public:
     void set(uint32_t key, std::shared_ptr<DataType> value);
     void remove(uint32_t key);
     void printBeautify();
+    std::vector<uint32_t> getKeys();
 
     void print();
 };

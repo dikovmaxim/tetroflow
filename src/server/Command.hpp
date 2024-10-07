@@ -17,7 +17,6 @@ enum CommandType {
     EXISTS,
     KEYS,
     TYPE,
-    EXPIRE,
     INVALID
 };
 
@@ -38,7 +37,6 @@ inline CommandType stringToCommandType(std::string type){
     if (type == "EXISTS") return CommandType::EXISTS;
     if (type == "KEYS") return CommandType::KEYS;
     if (type == "TYPE") return CommandType::TYPE;
-    if (type == "EXPIRE") return CommandType::EXPIRE;
 
     return CommandType::INVALID;
 }

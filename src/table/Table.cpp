@@ -51,6 +51,14 @@ void Table::remove(uint32_t key) {
     hashmap.erase(key);
 }
 
+std::vector<uint32_t> Table::getKeys() {
+    std::vector<uint32_t> keys;
+    for (auto const& [key, val] : hashmap) {
+        keys.push_back(key);
+    }
+    return keys;
+}
+
 void Table::print() {
     for (auto const& [key, val] : hashmap) {
         std::cout << key << ": " << val->to_string() << std::endl;
