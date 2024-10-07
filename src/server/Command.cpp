@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <stdexcept>
 
 #include "../Global.hpp"
 #include "../datatypes/Datatype.hpp"
@@ -9,6 +10,7 @@
 
 #include "Command.hpp"
 #include "Operations.hpp"
+#include "Cast.hpp"
 
 #include "../datatypes/Datatype.hpp"
 #include "../datatypes/Error.hpp"
@@ -98,7 +100,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             int keyInt;
             try {
                 keyInt = command.args.at("key");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return createString("Invalid key");
             }
             return operations::get(table, keyInt);
@@ -108,7 +110,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             try {
                 keyInt = command.args.at("key");
                 return operations::set(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return createString("Invalid key or value");
             }
         }
@@ -116,7 +118,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             int keyInt;
             try {
                 keyInt = command.args.at("key");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return createString("Invalid key");
             }
             return operations::del(table, keyInt);
@@ -126,7 +128,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             int keyInt;
             try {
                 keyInt = command.args.at("key");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return createString("Invalid key");
             }
             return operations::exists(table, keyInt);
@@ -140,7 +142,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             int keyInt;
             try {
                 keyInt = command.args.at("key");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return createString("Invalid key");
             }
             return operations::type(table, keyInt);
@@ -151,7 +153,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             try {
                 keyInt = command.args.at("key");
                 return operations::string::append(table, keyInt, command.args.at("value"));
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key or value");
             }
         }
@@ -160,7 +162,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             int keyInt;
             try {
                 keyInt = command.args.at("key");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key");
             }
             return operations::string::strlen(table, keyInt);
@@ -172,7 +174,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
                 keyInt = command.args.at("key");
                 start = command.args.at("start");
                 end = command.args.at("end");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key or range");
             }
             return operations::string::getrange(table, keyInt, start, end);
@@ -183,7 +185,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             try {
                 keyInt = command.args.at("key");
                 return operations::list::lpush(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key or value");
             }
         }
@@ -193,7 +195,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             try {
                 keyInt = command.args.at("key");
                 return operations::list::rpush(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key or value");
             }
         }
@@ -202,7 +204,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             int keyInt;
             try {
                 keyInt = command.args.at("key");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key");
             }
             return operations::list::lpop(table, keyInt);
@@ -212,7 +214,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             int keyInt;
             try {
                 keyInt = command.args.at("key");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key");
             }
             return operations::list::rpop(table, keyInt);
@@ -222,7 +224,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             int keyInt;
             try {
                 keyInt = command.args.at("key");
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key");
             }
             return operations::list::llen(table, keyInt);
@@ -234,7 +236,7 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
                 keyInt = command.args.at("key");
                 index = command.args.at("index");
                 return operations::list::lset(table, keyInt, index, JsonToDataType(command.args.at("value")));
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key, index or value");
             }
         }
@@ -245,10 +247,36 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
                 keyInt = command.args.at("key");
                 count = command.args.at("count");
                 return operations::list::lrem(table, keyInt, count, JsonToDataType(command.args.at("value")));
-            } catch (std::out_of_range&) {
+            } catch (const std::exception& e) {
                 return make_error("Invalid key, count or value");
             }
         }
+
+        case CommandType::CAST: {
+            int keyInt;
+            std::string type;
+            DataTypeType dataType;
+            try {
+                keyInt = command.args.at("key");
+                type = command.args.at("type");
+                dataType = stringToDataTypeType(type);
+                if(dataType == DataTypeType::UNDEFINED) {
+                    return make_error("Invalid type");
+                }
+            } catch (const std::exception& e) {
+                return make_error("Invalid key or type");
+            }
+            std::shared_ptr<DataType> value = table->get(keyInt);
+            std::shared_ptr<DataType> result = nullptr;
+            try{
+                result = Cast(value, dataType);
+                table->set(keyInt, result);
+            } catch (const std::exception& e) {
+                return make_error(e.what());
+            }
+            return result;
+        }
+
 
 
     }

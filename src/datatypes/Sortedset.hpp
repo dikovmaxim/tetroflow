@@ -22,7 +22,7 @@ public:
     }
 
     DataTypeType get_type() const override {
-        return DataTypeType::SORTED_SET;
+        return DataTypeType::SORTEDSET;
     }
 
     std::string to_string() const override {
@@ -30,9 +30,10 @@ public:
         for (auto it = value.begin(); it != value.end(); it++) {
             str += (*it)->to_string();
             if (it != value.end()) {
-                str += ", ";
+                str += ",";
             }
         }
+        if(value.size() > 0) str.pop_back();
         str += "]";
         return str;
     }

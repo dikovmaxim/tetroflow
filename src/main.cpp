@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
     // Test RPUSH Command (Right Push)
     command = jsonToCommand(R"({
         "command": "RPUSH", 
-        "arguments": {"key": 1, "value": [1,2,3,4,5,6,7,0.0777]}
+        "arguments": {"key": 1, "value": [1,2,3,4,5,6,7]}
     })");
     result = executeCommand(command, coreTable);
     std::cout << "RPUSH Command Result: " << result->to_string() << std::endl;
@@ -76,7 +76,27 @@ int main(int argc, char** argv) {
         "arguments": {"key": 1}
     })");
     result = executeCommand(command, coreTable);
-    std::cout << "LLEN Command Result after pops: " << result->to_string() << std::endl;
+    std::cout << "LLEN Command Result : " << result->to_string() << std::endl;
+
+        // Test LLEN Command (List Length) after pops
+    command = jsonToCommand(R"({
+        "command": "CAST", 
+        "arguments": {
+            "key": 1,
+            "type": "SORTEDSET"
+        }
+    })");
+    result = executeCommand(command, coreTable);
+    std::cout << "LLEN Command Result: " << result->to_string() << std::endl;
+
+    
+    command = jsonToCommand(R"({
+        "command": "LLEN", 
+        "arguments": {"key": 1}
+    })");
+    result = executeCommand(command, coreTable);
+    std::cout << "LLEN Command Result: " << result->to_string() << std::endl;
+
 
     //print the table
     coreTable->printBeautify();

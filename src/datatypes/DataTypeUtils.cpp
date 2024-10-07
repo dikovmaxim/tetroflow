@@ -40,8 +40,8 @@ std::string DataTypeType_to_string(DataTypeType type) {
             return "LIST";
         case DataTypeType::SET:
             return "SET";
-        case DataTypeType::SORTED_SET:
-            return "SORTED_SET";
+        case DataTypeType::SORTEDSET:
+            return "SORTEDSET";
         case DataTypeType::HASH:
             return "HASH";
         case DataTypeType::GEO:
@@ -50,6 +50,20 @@ std::string DataTypeType_to_string(DataTypeType type) {
             return "RESPONSE";
     }
     return "UNKNOWN";
+}
+
+DataTypeType stringToDataTypeType(std::string type) {
+    if(type == "STRING") return DataTypeType::STRING;
+    if(type == "INTEGER") return DataTypeType::INTEGER;
+    if(type == "FLOAT") return DataTypeType::FLOAT;
+    if(type == "BITMAP") return DataTypeType::BITMAP;
+    if(type == "LIST") return DataTypeType::LIST;
+    if(type == "SET") return DataTypeType::SET;
+    if(type == "SORTEDSET") return DataTypeType::SORTEDSET;
+    if(type == "BOOLEAN") return DataTypeType::BOOLEAN;
+    if(type == "STRING") return DataTypeType::STRING;
+
+    return DataTypeType::UNDEFINED;
 }
 
 std::string bytesToString(const std::vector<std::byte>& bytes) {
@@ -92,7 +106,7 @@ std::shared_ptr<DataType> from_string(std::string str, std::string type) {
         return std::make_shared<List>();
     } else if (type == "SET") {
         return std::make_shared<Set>();
-    } else if (type == "SORTED_SET") {
+    } else if (type == "SORTEDSET") {
         return std::make_shared<Sortedset>();
     } else {
         throw std::invalid_argument("Unknown data type");

@@ -28,6 +28,7 @@ enum CommandType {
     LSET,
     LINSERT,
     LREM,
+    CAST,
 
     INVALID
 };
@@ -60,6 +61,7 @@ inline CommandType stringToCommandType(std::string type){
     if (type == "LSET") return CommandType::LSET;
     if (type == "LINSERT") return CommandType::LINSERT;
     if (type == "LREM") return CommandType::LREM;
+    if (type == "CAST") return CommandType::CAST;
     
 
     return CommandType::INVALID;

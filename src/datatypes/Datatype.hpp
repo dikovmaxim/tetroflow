@@ -13,16 +13,19 @@ enum class DataTypeType {
     BITMAP = 7,
     LIST = 8,
     SET = 9,
-    SORTED_SET = 10,
+    SORTEDSET = 10,
     HASH = 11,
     GEO = 12,
     RESPONSE = 13,
-    BOOLEAN = 14
+    BOOLEAN = 14,
+    UNDEFINED = 15
 };
 
 std::string DataTypeType_to_string(DataTypeType type);
 std::string bytesToString(const std::vector<std::byte>& bytes);
 std::string base64_encode(const std::vector<std::byte>& bytes);
+DataTypeType stringToDataTypeType(std::string type);
+
 
 class DataType {
 public:

@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <stdexcept>
 
 #include "../Global.hpp"
 #include "../datatypes/Datatype.hpp"
@@ -13,7 +14,7 @@
 #include "../datatypes/Boolean.hpp"
 #include "../datatypes/Float.hpp"
 #include "../datatypes/Set.hpp"
-#include "../datatypes/SortedSet.hpp"
+#include "../datatypes/Sortedset.hpp"
 
 inline std::shared_ptr<DataType> ListToSet(std::shared_ptr<List> list) {
     std::shared_ptr<Set> set = std::make_shared<Set>();
@@ -109,7 +110,33 @@ inline std::shared_ptr<DataType> ListToString(std::shared_ptr<List> list) {
     return std::make_shared<String>(s);
 }
 
-inline std::shared_ptr<DataType> Convert(std::shared_ptr<DataType> value, DataTypeType type) {
+inline std::shared_ptr<DataType> ListToSortedset(std::shared_ptr<List> list) {
+    std::shared_ptr<Sortedset> sortedset = std::make_shared<Sortedset>();
+    for (auto& item : list->get_value()) {
+        sortedset->zadd(item, 0);
+    }
+    return sortedset;
+}
+
+inline std::shared_ptr<DataType> SetToSortedset(std::shared_ptr<Set> set) {
+    std::shared_ptr<Sortedset> sortedset = std::make_shared<Sortedset>();
+    for (auto& item : set->get_value()) {
+        sortedset->zadd(item, 0);
+    }
+    return sortedset;
+}
+
+inline std::shared_ptr<DataType> SortedsetToList(std::shared_ptr<Sortedset> sortedset) {
+    std::shared_ptr<List> list = std::make_shared<List>();
+    for (auto& item : sortedset->get_value()) {
+        list->rpush(item);
+    }
+    return list;
+}
+
+
+
+inline std::shared_ptr<DataType> Cast(std::shared_ptr<DataType> value, DataTypeType type) {
     switch (type) {
         case DataTypeType::SET: {
             if (value->get_type() == DataTypeType::LIST) {
@@ -123,6 +150,9 @@ inline std::shared_ptr<DataType> Convert(std::shared_ptr<DataType> value, DataTy
             }
             if (value->get_type() == DataTypeType::STRING) {
                 return StringToList(std::static_pointer_cast<String>(value));
+            }
+            if (value->get_type() == DataTypeType::SORTEDSET) {
+                return SortedsetToList(std::static_pointer_cast<Sortedset>(value));
             }
             break;
         }
@@ -177,8 +207,19 @@ inline std::shared_ptr<DataType> Convert(std::shared_ptr<DataType> value, DataTy
             }
             break;
         }
+
+        case DataTypeType::SORTEDSET: {
+            if (value->get_type() == DataTypeType::LIST) {
+                return ListToSortedset(std::static_pointer_cast<List>(value));
+            }
+            if (value->get_type() == DataTypeType::SET) {
+                return SetToSortedset(std::static_pointer_cast<Set>(value));
+            }
+            break;
+        }
+
         default:
             break;
     }
-    return make_error("ERR Operation against a key holding the wrong kind of value");
+    throw std::invalid_argument("Invalid cast");
 }
