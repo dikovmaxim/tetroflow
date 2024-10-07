@@ -4,14 +4,11 @@
 #include <vector>
 #include <string>
 
-#define TABLE_INITIAL_SIZE 30
+#include "table/Table.hpp"
 
-#include "storage/Storage.hpp"
 
-// Declare storage as extern without initializing
-extern Storage* storage;
+extern std::shared_ptr<Table> coreTable;
 
-// Declare the initStorage function
 void initStorage();
 
 

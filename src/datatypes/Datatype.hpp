@@ -16,6 +16,7 @@ enum class DataTypeType {
     SORTED_SET = 10,
     HASH = 11,
     GEO = 12,
+    RESPONSE = 13
 };
 
 std::string DataTypeType_to_string(DataTypeType type);

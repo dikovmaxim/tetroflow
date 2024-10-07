@@ -6,9 +6,13 @@
 #include <vector>
 
 #include "Datatype.hpp"
+#include "interfaces/Iterable.hpp"
 
-class Set : public DataType {
+class Set : public DataType{
 public:
+
+    //Constructors
+
     Set(std::unordered_set<std::shared_ptr<DataType>> value) : value(value) {}
     Set() : value(std::unordered_set<std::shared_ptr<DataType>>()) {}
 

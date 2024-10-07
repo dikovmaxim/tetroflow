@@ -7,12 +7,22 @@
 #include <string>
 
 #include "log/Logger.hpp"
+#include "table/Table.hpp"
 
-// Define the storage variable (initialized as nullptr)
-Storage* storage = nullptr;
+#include "Global.hpp"
+
+#include "datatypes/String.hpp"
+#include "datatypes/Integer.hpp"
+#include "datatypes/Float.hpp"
+#include "datatypes/List.hpp"
+
+// Define the coreTable variable (shared pointer to a Table object, defined as extern in Global.hpp)
+std::shared_ptr<Table> coreTable;
 
 // Define the initStorage function
 void initStorage() {
-    storage = new Storage();
+    // Create a new Table object
+    coreTable = std::make_shared<Table>(100);
+    // Log that the storage has been initialized
     log(LOG_INFO, "Storage initialized");
 }
