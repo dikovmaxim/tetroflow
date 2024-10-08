@@ -12,6 +12,10 @@ public:
         return value;
     }
 
+    std::shared_ptr<DataType> copy() const override {
+        return std::make_shared<String>(value);
+    }
+
     void set_value(std::string value) {
         this->value = value;
     }

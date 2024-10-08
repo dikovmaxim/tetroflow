@@ -42,6 +42,10 @@ public:
         return str;
     }
 
+    std::shared_ptr<DataType> copy() const override {
+        return std::make_shared<Set>(value);
+    }
+
     void sadd(std::shared_ptr<DataType> value) {
         this->value.insert(value);
     }

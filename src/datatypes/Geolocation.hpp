@@ -7,6 +7,8 @@
 class Geolocation : public DataType {
 public:
     Geolocation(float latitude, float longitude) : latitude(latitude), longitude(longitude) {}
+    Geolocation() : latitude(0), longitude(0) {}
+
 
     float get_latitude() const {
         return latitude;
@@ -22,6 +24,10 @@ public:
 
     void set_longitude(float longitude) {
         this->longitude = longitude;
+    }
+
+    std::shared_ptr<DataType> copy() const override {
+        return std::make_shared<Geolocation>(latitude, longitude);
     }
 
     DataTypeType get_type() const override {

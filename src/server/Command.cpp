@@ -61,7 +61,10 @@ void printCommand(const Command& command) {
 }
 
 std::shared_ptr<DataType> JsonToDataType(nlohmann::json j) {
-    if (j.is_string()) {
+    if (j.is_boolean()) {
+        return createBoolean(j.get<bool>());
+    }
+    else if (j.is_string()) {
         return createString(j.get<std::string>());
     } 
     else if (j.is_number_float()) {
@@ -69,9 +72,6 @@ std::shared_ptr<DataType> JsonToDataType(nlohmann::json j) {
     } 
     else if (j.is_number_integer()) {
         return createInteger(j.get<int>());
-    }
-    else if (j.is_boolean()) {
-        return createBoolean(j.get<bool>());
     }
     else if (j.is_array()) {
         // Always treat arrays as List, whether empty or not
@@ -97,40 +97,20 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
     // Execute the command based on the type
     switch (type) {
         case CommandType::GET: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return createString("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::get(table, keyInt);
         }
         case CommandType::SET: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-                return operations::set(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (const std::exception& e) {
-                return createString("Invalid key or value");
-            }
+            int keyInt = command.args.at("key");
+            return operations::set(table, keyInt, JsonToDataType(command.args.at("value")));
         }
         case CommandType::DEL: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return createString("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::del(table, keyInt);
         }
 
         case CommandType::EXISTS: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return createString("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::exists(table, keyInt);
         }
 
@@ -139,132 +119,70 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
         }
 
         case CommandType::TYPE: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return createString("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::type(table, keyInt);
         }
 
         case CommandType::APPEND: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-                return operations::string::append(table, keyInt, command.args.at("value"));
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or value");
-            }
+            int keyInt = command.args.at("key");
+            return operations::string::append(table, keyInt, command.args.at("value"));
         }
 
         case CommandType::STRLEN: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::string::strlen(table, keyInt);
         }
 
         case CommandType::GETRANGE: {
-            int keyInt, start, end;
-            try {
-                keyInt = command.args.at("key");
-                start = command.args.at("start");
-                end = command.args.at("end");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or range");
-            }
+            int keyInt = command.args.at("key");
+            int start = command.args.at("start");
+            int end = command.args.at("end");
             return operations::string::getrange(table, keyInt, start, end);
         }
 
         case CommandType::LPUSH: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-                return operations::list::lpush(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or value");
-            }
+            int keyInt = command.args.at("key");
+            return operations::list::lpush(table, keyInt, JsonToDataType(command.args.at("value")));
         }
 
         case CommandType::RPUSH: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-                return operations::list::rpush(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or value");
-            }
+            int keyInt = command.args.at("key");
+            return operations::list::rpush(table, keyInt, JsonToDataType(command.args.at("value")));
         }
 
         case CommandType::LPOP: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::list::lpop(table, keyInt);
         }
 
         case CommandType::RPOP: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::list::rpop(table, keyInt);
         }
 
         case CommandType::LLEN: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::list::llen(table, keyInt);
         }
 
         case CommandType::LSET: {
-            int keyInt, index;
-            try {
-                keyInt = command.args.at("key");
-                index = command.args.at("index");
-                return operations::list::lset(table, keyInt, index, JsonToDataType(command.args.at("value")));
-            } catch (const std::exception& e) {
-                return make_error("Invalid key, index or value");
-            }
+            int keyInt = command.args.at("key");
+            int index = command.args.at("index");
+            return operations::list::lset(table, keyInt, index, JsonToDataType(command.args.at("value")));
         }
         
         case CommandType::LREM: {
-            int keyInt, count;
-            try {
-                keyInt = command.args.at("key");
-                count = command.args.at("count");
-                return operations::list::lrem(table, keyInt, count, JsonToDataType(command.args.at("value")));
-            } catch (const std::exception& e) {
-                return make_error("Invalid key, count or value");
-            }
+            int keyInt = command.args.at("key");
+            int count = command.args.at("count");
+            return operations::list::lrem(table, keyInt, count, JsonToDataType(command.args.at("value")));
         }
 
         case CommandType::CAST: {
-            int keyInt;
-            std::string type;
-            DataTypeType dataType;
-            try {
-                keyInt = command.args.at("key");
-                type = command.args.at("type");
-                dataType = stringToDataTypeType(type);
-                if(dataType == DataTypeType::UNDEFINED) {
-                    return make_error("Invalid type");
-                }
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or type");
+            int keyInt = command.args.at("key");
+            std::string type = command.args.at("type");
+            DataTypeType dataType = stringToDataTypeType(type);
+            if(dataType == DataTypeType::UNDEFINED) {
+                throw std::invalid_argument("Invalid data type");
             }
             std::shared_ptr<DataType> value = table->get(keyInt);
             std::shared_ptr<DataType> result = nullptr;
@@ -272,38 +190,23 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
                 result = Cast(value, dataType);
                 table->set(keyInt, result);
             } catch (const std::exception& e) {
-                return make_error(e.what());
+                throw std::invalid_argument(e.what());
             }
             return result;
         }
 
         case CommandType::SADD: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-                return operations::dataset::sadd(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or value");
-            }
+            int keyInt = command.args.at("key");
+            return operations::dataset::sadd(table, keyInt, JsonToDataType(command.args.at("value")));
         }
 
         case CommandType::SREM: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-                return operations::dataset::srem(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or value");
-            }
+            int keyInt = command.args.at("key");
+            return operations::dataset::srem(table, keyInt, JsonToDataType(command.args.at("value")));
         }
 
         case CommandType::SCARD: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::dataset::scard(table, keyInt);
         }
 
@@ -320,99 +223,54 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
         }
 
         case CommandType::ZREM: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-                return operations::sortedset::zrem(table, keyInt, JsonToDataType(command.args.at("value")));
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or value");
-            }
+            int keyInt = command.args.at("key");
+            return operations::sortedset::zrem(table, keyInt, JsonToDataType(command.args.at("value")));
         }
 
         case CommandType::ZRANGE: {
-            int keyInt, start, end;
-            try {
-                keyInt = command.args.at("key");
-                start = command.args.at("start");
-                end = command.args.at("end");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or range");
-            }
+            int keyInt = command.args.at("key");
+            int start = command.args.at("start");
+            int end = command.args.at("end");
             return operations::sortedset::zrange(table, keyInt, start, end);
         }
 
         case CommandType::ZREVRANGE: {
-            int keyInt, start, end;
-            try {
-                keyInt = command.args.at("key");
-                start = command.args.at("start");
-                end = command.args.at("end");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or range");
-            }
+            int keyInt = command.args.at("key");
+            int start = command.args.at("start");
+            int end = command.args.at("end");
             return operations::sortedset::zrevrange(table, keyInt, start, end);
         }
 
         case CommandType::ZCARD: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::sortedset::zcard(table, keyInt);
         }
 
         case CommandType::INC: {
             std::cout << command.args << std::endl;
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::integer::inc(table, keyInt);
         }
 
         case CommandType::DEC: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::integer::dec(table, keyInt);
         }
 
         case CommandType::INCBY: {
-            int keyInt, increment;
-            try {
-                keyInt = command.args.at("key");
-                increment = command.args.at("increment");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or increment");
-            }
+            int keyInt = command.args.at("key");
+            int increment = command.args.at("increment");
             return operations::integer::incby(table, keyInt, increment);
         }
 
         case CommandType::DECBY: {
-            int keyInt, decrement;
-            try {
-                keyInt = command.args.at("key");
-                decrement = command.args.at("decrement");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key or decrement");
-            }
+            int keyInt = command.args.at("key");
+            int decrement = command.args.at("decrement");
             return operations::integer::decby(table, keyInt, decrement);
         }
 
         case CommandType::FLIP: {
-            int keyInt;
-            try {
-                keyInt = command.args.at("key");
-            } catch (const std::exception& e) {
-                return make_error("Invalid key");
-            }
+            int keyInt = command.args.at("key");
             return operations::boolean::flip(table, keyInt);
         }
 

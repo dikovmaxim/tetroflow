@@ -16,9 +16,9 @@ enum class DataTypeType {
     SORTEDSET = 10,
     HASH = 11,
     GEO = 12,
-    RESPONSE = 13,
     BOOLEAN = 14,
-    UNDEFINED = 15
+    UNDEFINED = 15,
+    ERROR = 16
 };
 
 std::string DataTypeType_to_string(DataTypeType type);
@@ -35,6 +35,8 @@ public:
     virtual DataTypeType get_type() const = 0;
 
     virtual ~DataType() = default;
+
+    virtual std::shared_ptr<DataType> copy() const = 0;
 };
 
 std::shared_ptr<DataType> from_string(std::string str, std::string type);

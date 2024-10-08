@@ -76,6 +76,8 @@
         "numeric": "cpp",
         "ranges": "cpp",
         "span": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "deque": "cpp",
+        "queue": "cpp"
     }
 }

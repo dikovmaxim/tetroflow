@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <memory>
+#include <queue>
 
 #include "log/Logger.hpp"
 #include "table/Table.hpp"
@@ -15,6 +17,9 @@
 #include "datatypes/Integer.hpp"
 #include "datatypes/Float.hpp"
 #include "datatypes/List.hpp"
+
+#include "transactions/Transaction.hpp"
+
 
 // Define the coreTable variable (shared pointer to a Table object, defined as extern in Global.hpp)
 std::shared_ptr<Table> coreTable;

@@ -28,6 +28,10 @@ public:
         return std::to_string(value);
     }
 
+    std::shared_ptr<DataType> copy() const override {
+        return std::make_shared<Integer>(value);
+    }
+
     void increment() {
         value++;
     }

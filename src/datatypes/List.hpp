@@ -35,6 +35,10 @@ public:
         return str;
     }
 
+    std::shared_ptr<DataType> copy() const override {
+        return std::make_shared<List>(value);
+    }
+
     //Iterable interface methods
 
     void set(int index, std::shared_ptr<DataType> value) override {

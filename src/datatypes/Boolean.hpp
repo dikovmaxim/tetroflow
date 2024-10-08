@@ -24,6 +24,10 @@ public:
         return value ? "true" : "false";
     }
 
+    std::shared_ptr<DataType> copy() const override {
+        return std::make_shared<Boolean>(value);
+    }
+
     bool flip() {
         value = !value;
         return value;

@@ -75,3 +75,17 @@ void Table::printBeautify() {
     }
     printf("--------------------\n");
 }
+
+std::shared_ptr<Table> Table::copy() {
+    auto newTable = std::make_shared<Table>(hashmap.size());
+    for (auto const& [key, val] : hashmap) {
+        newTable->set(key, val->copy());
+    }
+    return newTable;
+}
+
+void Table::merge(std::shared_ptr<Table> other) {
+    for (auto const& [key, val] : other->hashmap) {
+        hashmap[key] = val;
+    }
+}

@@ -24,6 +24,10 @@ public:
         return "{\"error\": \"" + value + "\"}";
     }
 
+    std::shared_ptr<DataType> copy() const override {
+        return std::make_shared<Error>(value);
+    }
+
 
 private:
     std::string value;

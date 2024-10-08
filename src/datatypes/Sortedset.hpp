@@ -38,6 +38,10 @@ public:
         return str;
     }
 
+    std::shared_ptr<DataType> copy() const override {
+        return std::make_shared<Sortedset>(value);
+    }
+
     void zadd(std::shared_ptr<DataType> value, const float score) {
         this->value.insert(value);
     }

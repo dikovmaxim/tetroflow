@@ -27,6 +27,8 @@ public:
     void remove(uint32_t key);
     void printBeautify();
     std::vector<uint32_t> getKeys();
+    std::shared_ptr<Table> copy();
+    void merge(std::shared_ptr<Table> other);
 
     void print();
 };
