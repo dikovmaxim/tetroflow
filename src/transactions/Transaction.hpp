@@ -26,12 +26,13 @@ private:
     std::shared_ptr<Table> snapshot;
     TransactionError error;
     std::shared_ptr<DataType> result;
-    std::function<void(const std::string&, int)> callback;
+    std::function<void(const std::shared_ptr<DataType>&, int)> callback;
 
     bool isCommited;
+    int socket;
     //callback function with a 
 public:
-    Transaction(std::shared_ptr<Table> table);
+    Transaction(std::shared_ptr<Table> table, std::function<void(const std::shared_ptr<DataType>&, int)> callback, int socket);
     ~Transaction();
     void addCommand(Command command);
     void commit();
@@ -39,4 +40,12 @@ public:
     TransactionError getError();
 };
 
-Transaction makeSingleCommandTransaction(Command command, std::shared_ptr<Table> table);
+Transaction makeSingleCommandTransaction(
+    Command command,
+    std::shared_ptr<Table> table,
+    std::function<void(
+        const std::shared_ptr<DataType>&,
+        int)>
+    callback,
+    int socket
+);

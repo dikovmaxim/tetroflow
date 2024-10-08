@@ -189,17 +189,20 @@ void testAllCommands() {
     std::cout << "FLIP Command Result: " << result->to_string() << std::endl;
 }
 
+void transactionCallback(const std::shared_ptr<DataType>& result, int socket) {
+    std::cout << "Transaction callback: " << result->to_string() << std::endl;
+}
+
 int main(int argc, char** argv) {
 
     initStorage();
-    
 
     Command command = jsonToCommand(R"({
         "command": "SET",
         "arguments": {"key": 1, "value": 100}
     })");
 
-    Transaction transaction = makeSingleCommandTransaction(command, coreTable);
+    Transaction transaction = makeSingleCommandTransaction(command, coreTable, transactionCallback, 0);
     addTransaction(std::make_shared<Transaction>(transaction));
 
     startTransactionHandling();

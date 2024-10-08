@@ -12,7 +12,6 @@ std::queue<std::shared_ptr<Transaction>> transactions;
 
 void addTransaction(std::shared_ptr<Transaction> transaction) {
     transactions.push(transaction);
-    log(LOG_INFO, "Transaction added to queue");
 }
 
 void startTransactionHandling() {
