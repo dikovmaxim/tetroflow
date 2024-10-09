@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++20 -O2 -Wno-unused-parameter
+CXXFLAGS = -std=c++20 -O2 -Wno-unused-parameter -g
 
 # Directories
 SRC_DIR = ./src

@@ -5,6 +5,8 @@
 #include "../datatypes/DataType.hpp"
 #include "../datatypes/Error.hpp"
 
+#include "../log/Logger.hpp"
+
 #include <memory>
 #include <stdexcept>
 
@@ -35,7 +37,6 @@ void Transaction::commit() {
     }
     isCommited = true;
     snapshot->merge(table);
-    snapshot->printBeautify();
     callback(result, socket);
 }
 

@@ -92,8 +92,6 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
     // Get the JSON object
     nlohmann::json j = command.json;
 
-    std::cout << "Executing command: " << j << std::endl;
-
     // Execute the command based on the type
     switch (type) {
         case CommandType::GET: {
@@ -247,7 +245,6 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
         }
 
         case CommandType::INC: {
-            std::cout << command.args << std::endl;
             int keyInt = command.args.at("key");
             return operations::integer::inc(table, keyInt);
         }

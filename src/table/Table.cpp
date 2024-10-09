@@ -85,7 +85,5 @@ std::shared_ptr<Table> Table::copy() {
 }
 
 void Table::merge(std::shared_ptr<Table> other) {
-    for (auto const& [key, val] : other->hashmap) {
-        hashmap[key] = val;
-    }
+    std::swap(hashmap, other->hashmap);
 }
