@@ -271,6 +271,10 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
             return operations::boolean::flip(table, keyInt);
         }
 
+        case CommandType::PING: {
+            return std::make_shared<String>("PONG");
+        }
+
 
 
     }

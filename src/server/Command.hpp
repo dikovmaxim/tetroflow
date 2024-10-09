@@ -11,6 +11,9 @@
 #include "json_fwd.hpp"
 
 enum CommandType {
+
+    PING,
+
     GET,
     SET,
     DEL,
@@ -64,6 +67,9 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
 Command jsonToCommand(const std::string json);
 
 inline CommandType stringToCommandType(std::string type){
+
+    if (type == "PING") return CommandType::PING;
+
     if (type == "GET") return CommandType::GET;
     if (type == "SET") return CommandType::SET;
     if (type == "DEL") return CommandType::DEL;

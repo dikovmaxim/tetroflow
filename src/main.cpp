@@ -24,51 +24,18 @@
 #include "transactions/TransactionManager.hpp"
 
 #include "server/Command.hpp"
+#include "server/Operations.hpp"
+#include "server/Server.hpp"
 
 
-void transactionCallback(const std::shared_ptr<DataType>& result, int socket) {
-    //std::cout << "Transaction callback: " << result->to_string() << std::endl;
-}
 
-void test(){
-
-
-    //wait 1 second
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    coreTable -> printBeautify();
-
-    Command command = jsonToCommand(R"({
-        "command": "INC",
-        "arguments": {"key": 1}
-    })");
-
-    for(int i = 0; i < 100; i++){
-        Transaction transaction = makeSingleCommandTransaction(command, coreTable, transactionCallback, i);
-        addTransaction(std::make_shared<Transaction>(transaction));
-        //std::this_thread::sleep_for(std::chrono::nanoseconds(1));
-    }
-
-    std::this_thread::sleep_for(std::chrono::nanoseconds(100));
-    coreTable -> printBeautify();
-    
-}
 
 int main(int argc, char** argv) {
 
     initStorage();
     startTransactionHandling();
 
-    Command command = jsonToCommand(R"({
-        "command": "SET",
-        "arguments": {"key": 1, "value": 100}
-    })");
-
-    Transaction transaction = makeSingleCommandTransaction(command, coreTable, transactionCallback, 0);
-    addTransaction(std::make_shared<Transaction>(transaction));
-
-
-    std::thread testThread(test);
-    testThread.detach();
+    startServer();
 
     return 0;
 }

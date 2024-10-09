@@ -2,20 +2,21 @@
 
 #include "../server/Command.hpp"
 #include "../server/Operations.hpp"
-#include "../datatypes/DataType.hpp"
+#include "../datatypes/Datatype.hpp"
 #include "../datatypes/Error.hpp"
 
 #include "../log/Logger.hpp"
+#include "../server/Client.hpp"
 
 #include <memory>
 #include <stdexcept>
 
 
-Transaction::Transaction(std::shared_ptr<Table> table, std::function<void(const std::shared_ptr<DataType>&, int)> callback, int socket) {
+Transaction::Transaction(std::shared_ptr<Table> table, std::function<void(const std::shared_ptr<DataType>, Client&)> callback, Client& client)
+    : client(client) {  // Initialize client in the initializer list
     this->snapshot = table;
     this->table = table->copy();
     this->isCommited = false;
-    this->socket = socket;
     this->callback = callback;
 }
 
@@ -31,13 +32,13 @@ void Transaction::commit() {
             error.command = command;
             error.message = e.what();
             rollback();
-            callback(std::make_shared<Error>(error.message), socket);
+            callback(std::make_shared<Error>(error.message), client);
             return;
         }
     }
     isCommited = true;
     snapshot->merge(table);
-    callback(result, socket);
+    callback(result, client);
 }
 
 void Transaction::rollback() {
@@ -57,13 +58,10 @@ Transaction::~Transaction() {
 Transaction makeSingleCommandTransaction(
     Command command,
     std::shared_ptr<Table> table,
-    std::function<void(
-        const std::shared_ptr<DataType>&,
-        int)>
-    callback,
-    int socket
+    std::function<void(const std::shared_ptr<DataType>, Client&)> callback,
+    Client& client
 ) {
-    Transaction transaction(table, callback, socket);
+    Transaction transaction(table, callback, client);
     transaction.addCommand(command);
     return transaction;
 }
