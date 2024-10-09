@@ -16,6 +16,8 @@ std::mutex queueMutex; // Mutex for protecting the transaction queue
 std::condition_variable cv; // Condition variable for transaction queue
 bool stopHandling = false; // Flag to stop transaction handling
 
+std::thread handlingThread; // Thread for handling transactions
+
 void addTransaction(std::shared_ptr<Transaction> transaction) {
     {
         std::lock_guard<std::mutex> lock(queueMutex);
@@ -47,5 +49,13 @@ void handleQueue() {
 }
 
 void startTransactionHandling() {
-    handleQueue();
+    handlingThread = std::thread(handleQueue);
+    handlingThread.detach();
+}
+
+void stopTransactionHandling() {
+    stopHandling = true;
+    cv.notify_one();
+    handlingThread.join();
+    log(LOG_INFO, "Stopped transaction handling");
 }

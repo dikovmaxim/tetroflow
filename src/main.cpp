@@ -56,6 +56,7 @@ void test(){
 int main(int argc, char** argv) {
 
     initStorage();
+    startTransactionHandling();
 
     Command command = jsonToCommand(R"({
         "command": "SET",
@@ -65,15 +66,9 @@ int main(int argc, char** argv) {
     Transaction transaction = makeSingleCommandTransaction(command, coreTable, transactionCallback, 0);
     addTransaction(std::make_shared<Transaction>(transaction));
 
-    
-    //start test in a new thread
+
     std::thread testThread(test);
     testThread.detach();
-
-
-    startTransactionHandling();
-
-    
 
     return 0;
 }
