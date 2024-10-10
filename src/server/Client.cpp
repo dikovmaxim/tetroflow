@@ -19,6 +19,7 @@
 #include "Operations.hpp"
 #include "../transactions/Transaction.hpp"
 #include "../transactions/TransactionManager.hpp"
+#include "../Global.hpp"
 
 
 Client::Client(int socket) {
@@ -32,7 +33,22 @@ Client::~Client() {
 }
 
 void transactionCallback(const std::shared_ptr<DataType> data, Client& client) {
-    std::cout << "Transaction callback for client" << std::endl;
+
+    //parse data.t0_string() to json
+    std::string dataString = data->to_string();
+    nlohmann::json json = nlohmann::json::parse(dataString);
+
+    std::cout << "Sending: " << json.dump() << std::endl;
+
+    //create a json object.
+    nlohmann::json response = {
+        {"response", json}
+    };
+
+
+    //send the json object to the client
+    client.send(response);
+
 }
 
 
@@ -61,8 +77,14 @@ void Client::handle() {
         }
 
         
-        //print a command json
-        std::cout << command.json.dump() << std::endl;
+        Transaction transaction = makeSingleCommandTransaction(
+            command,
+            coreTable,
+            transactionCallback,
+            *this
+        );
+
+        addTransaction(std::make_shared<Transaction>(transaction));
 
     }
 

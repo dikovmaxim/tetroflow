@@ -33,12 +33,11 @@ void Transaction::commit() {
             error.message = e.what();
             rollback();
             callback(std::make_shared<Error>(error.message), client);
-            return;
         }
     }
+    callback(result, client);
     isCommited = true;
     snapshot->merge(table);
-    callback(result, client);
 }
 
 void Transaction::rollback() {
