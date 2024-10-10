@@ -105,7 +105,9 @@ inline std::shared_ptr<DataType> StringToList(std::shared_ptr<String> s) {
 inline std::shared_ptr<DataType> ListToString(std::shared_ptr<List> list) {
     std::string s;
     for (auto& item : list->get_value()) {
-        s += item->to_string();
+        std::string itemStr = item->to_string();
+        //remove quotes
+        s += itemStr.substr(1, itemStr.size() - 2);
     }
     return std::make_shared<String>(s);
 }

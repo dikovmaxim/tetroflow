@@ -79,6 +79,16 @@
         "valarray": "cpp",
         "deque": "cpp",
         "queue": "cpp",
-        "condition_variable": "cpp"
+        "condition_variable": "cpp",
+        "variant": "cpp",
+        "*.tcc": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "memory_resource": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "cinttypes": "cpp",
+        "text_encoding": "cpp"
     }
 }

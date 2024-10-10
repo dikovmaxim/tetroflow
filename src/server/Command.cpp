@@ -21,23 +21,24 @@
 #include "../datatypes/String.hpp"
 #include "../datatypes/Boolean.hpp"
 
+#include "../log/Logger.hpp"
+
 // Refactor Command class to handle arguments as a single object with key-value pairs
 
 
 Command jsonToCommand(const std::string json) {
     // Parse the JSON string, if not possible, throw an exception
     nlohmann::json j;
+    Command command;
+    std::string type;
+
     try {
         j = nlohmann::json::parse(json);
-    } catch (nlohmann::json::parse_error& e) {
+        type = j["command"];
+    } catch (const std::exception& e) {
         throw std::invalid_argument("Invalid JSON");
     }
 
-    // Create a new Command object
-    Command command;
-
-    // Get the command type from the JSON object
-    std::string type = j["command"];
 
     command.json = j;
 
@@ -61,6 +62,9 @@ void printCommand(const Command& command) {
 }
 
 std::shared_ptr<DataType> JsonToDataType(nlohmann::json j) {
+
+    std::cout << j << std::endl;
+
     if (j.is_boolean()) {
         return createBoolean(j.get<bool>());
     }
@@ -77,6 +81,7 @@ std::shared_ptr<DataType> JsonToDataType(nlohmann::json j) {
         // Always treat arrays as List, whether empty or not
         std::list<std::shared_ptr<DataType>> listData;
         for (auto& item : j) {
+            std::cout << item << std::endl;
             listData.push_back(JsonToDataType(item));
         }
         return createList(listData);
@@ -274,8 +279,6 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
         case CommandType::PING: {
             return std::make_shared<String>("PONG");
         }
-
-
 
     }
 

@@ -35,10 +35,14 @@ Client::~Client() {
 void transactionCallback(const std::shared_ptr<DataType> data, Client& client) {
 
     //parse data.t0_string() to json
+
+    //if data is a null pointer, return an error
+    if(data == nullptr) {
+        return;
+    }
+
     std::string dataString = data->to_string();
     nlohmann::json json = nlohmann::json::parse(dataString);
-
-    std::cout << "Sending: " << json.dump() << std::endl;
 
     //create a json object.
     nlohmann::json response = {
@@ -71,8 +75,15 @@ void Client::handle() {
 
         try {
             command = jsonToCommand(std::string(buffer, bytesRead));
-        } catch (const nlohmann::json::parse_error& e) {
+        } catch (const std::exception& e) {
             log(LOG_ERROR, std::string("Failed to parse JSON: ") + e.what());
+
+            nlohmann::json response = {
+                {"error", "Invalid JSON"}
+            };
+
+            send(response);
+
             continue;
         }
 

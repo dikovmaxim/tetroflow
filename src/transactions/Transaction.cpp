@@ -32,7 +32,7 @@ void Transaction::commit() {
             error.command = command;
             error.message = e.what();
             rollback();
-            callback(std::make_shared<Error>(error.message), client);
+            callback(std::make_shared<Error>(std::string("An error occurred during the execution of the command. Error: ") + e.what()), client);
         }
     }
     callback(result, client);
