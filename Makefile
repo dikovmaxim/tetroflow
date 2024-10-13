@@ -1,5 +1,8 @@
 CXX = g++
-CXXFLAGS = -std=c++20 -O2 -Wno-unused-parameter -g
+CXXFLAGS = -std=c++20 -O2 -Wno-unused-parameter
+
+# Add -static to force static linking
+LDFLAGS = -lstdc++ -lm -static
 
 # Directories
 SRC_DIR = ./src
@@ -20,7 +23,7 @@ all: compile
 compile: $(TARGET)
 # Rule to link object files into the final executable
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
 # Rule to compile .cpp files into .o files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp

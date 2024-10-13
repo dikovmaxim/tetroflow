@@ -1,2 +1,2 @@
-#define SOCKET_PATH "/tmp/db.sock"
+#define SOCKET_PATH "/tmp/tetracache.sock"
 void startServer();

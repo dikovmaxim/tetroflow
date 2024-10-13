@@ -63,7 +63,6 @@ void printCommand(const Command& command) {
 
 std::shared_ptr<DataType> JsonToDataType(nlohmann::json j) {
 
-    std::cout << j << std::endl;
 
     if (j.is_boolean()) {
         return createBoolean(j.get<bool>());
@@ -81,7 +80,6 @@ std::shared_ptr<DataType> JsonToDataType(nlohmann::json j) {
         // Always treat arrays as List, whether empty or not
         std::list<std::shared_ptr<DataType>> listData;
         for (auto& item : j) {
-            std::cout << item << std::endl;
             listData.push_back(JsonToDataType(item));
         }
         return createList(listData);
@@ -211,42 +209,6 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
         case CommandType::SCARD: {
             int keyInt = command.args.at("key");
             return operations::dataset::scard(table, keyInt);
-        }
-
-        case CommandType::ZADD: {
-            int keyInt;
-            float score;
-            try {
-                keyInt = command.args.at("key");
-                score = command.args.at("score");
-                return operations::sortedset::zadd(table, keyInt, JsonToDataType(command.args.at("value")), score);
-            } catch (const std::exception& e) {
-                return make_error("Invalid key, value or score");
-            }
-        }
-
-        case CommandType::ZREM: {
-            int keyInt = command.args.at("key");
-            return operations::sortedset::zrem(table, keyInt, JsonToDataType(command.args.at("value")));
-        }
-
-        case CommandType::ZRANGE: {
-            int keyInt = command.args.at("key");
-            int start = command.args.at("start");
-            int end = command.args.at("end");
-            return operations::sortedset::zrange(table, keyInt, start, end);
-        }
-
-        case CommandType::ZREVRANGE: {
-            int keyInt = command.args.at("key");
-            int start = command.args.at("start");
-            int end = command.args.at("end");
-            return operations::sortedset::zrevrange(table, keyInt, start, end);
-        }
-
-        case CommandType::ZCARD: {
-            int keyInt = command.args.at("key");
-            return operations::sortedset::zcard(table, keyInt);
         }
 
         case CommandType::INC: {

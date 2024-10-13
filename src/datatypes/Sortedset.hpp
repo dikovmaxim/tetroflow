@@ -84,6 +84,14 @@ public:
         value.clear();
     }
 
+    bool operator==(const DataType& other) const override {
+        if (get_type() != other.get_type()) {
+            return false;
+        }
+        Sortedset otherSortedset = static_cast<const Sortedset&>(other);
+        return value == otherSortedset.get_value();
+    }
+
 private:
     std::set<std::shared_ptr<DataType>> value;
 };

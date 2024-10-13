@@ -57,7 +57,7 @@ void transactionCallback(const std::shared_ptr<DataType> data, Client& client) {
 
 
 void Client::handle() {
-    while (true) {
+    while (hadling) {
         char buffer[READ_BUFFER_SIZE];
         ssize_t bytesRead = read(socket, buffer, READ_BUFFER_SIZE);
 
@@ -109,6 +109,9 @@ void Client::send(const nlohmann::json& json) {
 
 void Client::closeSocket() {
     // Wait for the thread to stop, detach if necessary
+
+    hadling = false;
+
     if (handler.joinable()) {
         handler.join();  // Wait for the thread to stop
     }

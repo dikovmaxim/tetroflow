@@ -19,6 +19,7 @@ public:
     void send(const nlohmann::json& json);
     void closeSocket();
 private:
+    bool hadling = true;
     int socket;
     std::thread handler;
 };

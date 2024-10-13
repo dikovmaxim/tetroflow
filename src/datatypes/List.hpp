@@ -150,6 +150,26 @@ public:
         value.clear();
     }
 
+    bool operator==(const DataType& other) const override {
+        if (get_type() != other.get_type()) {
+            return false;
+        }
+        List otherList = static_cast<const List&>(other);
+        if (value.size() != otherList.get_value().size()) {
+            return false;
+        }
+        auto it1 = value.begin();
+        auto it2 = otherList.get_value().begin();
+        while (it1 != value.end()) {
+            if (*it1 != *it2) {
+                return false;
+            }
+            it1++;
+            it2++;
+        }
+        return true;
+    }
+
 
 private:
     std::list<std::shared_ptr<DataType>> value;

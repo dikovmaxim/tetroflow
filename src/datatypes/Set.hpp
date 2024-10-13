@@ -13,14 +13,14 @@ public:
 
     //Constructors
 
-    Set(std::unordered_set<std::shared_ptr<DataType>> value) : value(value) {}
-    Set() : value(std::unordered_set<std::shared_ptr<DataType>>()) {}
+    Set(std::unordered_set<std::shared_ptr<DataType>, DataTypePtrHash, DataTypePtrEqual> value) : value(value) {}
+    Set() : value(std::unordered_set<std::shared_ptr<DataType>, DataTypePtrHash, DataTypePtrEqual>()) {}
 
-    std::unordered_set<std::shared_ptr<DataType>> get_value() const {
+    std::unordered_set<std::shared_ptr<DataType>, DataTypePtrHash, DataTypePtrEqual> get_value() const {
         return value;
     }
 
-    void set_value(std::unordered_set<std::shared_ptr<DataType>> value) {
+    void set_value(std::unordered_set<std::shared_ptr<DataType>, DataTypePtrHash, DataTypePtrEqual> value) {
         this->value = value;
     }
 
@@ -66,15 +66,23 @@ public:
         value.clear();
     }
 
+    bool operator==(const DataType& other) const override {
+        if (get_type() != other.get_type()) {
+            return false;
+        }
+        Set otherSet = static_cast<const Set&>(other);
+        return value == otherSet.get_value();
+    }
+
 
 
 private:
-    std::unordered_set<std::shared_ptr<DataType>> value;
+    std::unordered_set<std::shared_ptr<DataType>, DataTypePtrHash, DataTypePtrEqual> value;
 };
 
 //inline function with ... parameters
 inline std::shared_ptr<Set> createSet(std::vector<std::shared_ptr<DataType>> values) {
-    std::unordered_set<std::shared_ptr<DataType>> set;
+    std::unordered_set<std::shared_ptr<DataType>, DataTypePtrHash, DataTypePtrEqual> set;
     for (auto it = values.begin(); it != values.end(); it++) {
         set.insert(*it);
     }

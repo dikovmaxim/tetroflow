@@ -38,6 +38,14 @@ public:
         return "(\"Lat\": "+std::to_string(latitude) + "), (\"Lng\": " + std::to_string(longitude) + ")";
     }
 
+    bool operator==(const DataType& other) const override {
+        if (get_type() != other.get_type()) {
+            return false;
+        }
+        Geolocation otherGeolocation = static_cast<const Geolocation&>(other);
+        return latitude == otherGeolocation.get_latitude() && longitude == otherGeolocation.get_longitude();
+    }   
+
 private:
     float latitude;
     float longitude;

@@ -28,6 +28,13 @@ public:
         return std::make_shared<Float>(value);
     }
 
+    bool operator==(const DataType& other) const override {
+        if (get_type() != other.get_type()) {
+            return false;
+        }
+        return value == static_cast<const Float&>(other).value;
+    }
+
 private:
     float value;
 };

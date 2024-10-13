@@ -28,6 +28,13 @@ public:
         return std::make_shared<Error>(value);
     }
 
+    bool operator==(const DataType& other) const override {
+        if (get_type() != other.get_type()) {
+            return false;
+        }
+        return value == static_cast<const Error&>(other).value;
+    }
+
 
 private:
     std::string value;

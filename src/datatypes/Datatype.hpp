@@ -5,7 +5,6 @@
 #include <vector>
 #include <memory>
 
-
 enum class DataTypeType {
     STRING = 0,
     INTEGER = 1,
@@ -37,9 +36,25 @@ public:
     virtual ~DataType() = default;
 
     virtual std::shared_ptr<DataType> copy() const = 0;
+
+    virtual bool operator==(const DataType& other) const = 0;
 };
 
 std::shared_ptr<DataType> from_string(std::string str, std::string type);
+
+
+struct DataTypePtrHash {
+    std::size_t operator()(const std::shared_ptr<DataType>& ptr) const {
+        return std::hash<int>()(ptr->to_string().length());
+    }
+};
+
+// Custom equality function for std::shared_ptr<DataType>
+struct DataTypePtrEqual {
+    bool operator()(const std::shared_ptr<DataType>& lhs, const std::shared_ptr<DataType>& rhs) const {
+        return *lhs == *rhs;  // Compare dereferenced DataType objects
+    }
+};
 
 
 #endif //DATATYPE_HPP
