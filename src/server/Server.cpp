@@ -16,8 +16,29 @@
 
 
 std::vector<std::shared_ptr<Client>> clients;
+
+void printClients() {
+    while (1) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        log(LOG_INFO, "Number of clients: " + std::to_string(clients.size()));
+    }
+}
+
+void removeClientBySocket(int socket) {
+    for (auto it = clients.begin(); it != clients.end(); it++) {
+        if ((*it)->getSocket() == socket) {
+            clients.erase(it);
+            return;
+        }
+    }
+}
+
 //the server socket is reusable .sock file
 void startServer() {
+
+    //std::thread tt = std::thread(printClients);
+    //tt.detach();
+
     int serverSocket = socket(AF_UNIX, SOCK_STREAM, 0);
     if (serverSocket == -1) {
         log(LOG_ERROR, "Failed to create server socket");

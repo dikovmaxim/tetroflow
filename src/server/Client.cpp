@@ -20,6 +20,7 @@
 #include "../transactions/Transaction.hpp"
 #include "../transactions/TransactionManager.hpp"
 #include "../Global.hpp"
+#include "Server.hpp"
 
 
 Client::Client(int socket) {
@@ -116,6 +117,12 @@ void Client::closeSocket() {
         handler.join();  // Wait for the thread to stop
     }
 
+    removeClientBySocket(socket);
+
     // Close the socket (if not already closed by the thread)
     close(socket);
+}
+
+int Client::getSocket() const {
+    return socket;
 }
