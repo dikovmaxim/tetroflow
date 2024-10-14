@@ -46,4 +46,6 @@ public:
     MessageType GetType() const override {
         return type;
     }
+
+    ~MessageJoin() override = default;
 };

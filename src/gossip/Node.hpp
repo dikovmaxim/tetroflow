@@ -8,6 +8,7 @@
 #include <queue>
 
 #include "../messages/Message.hpp"
+#include "../server/json_fwd.hpp"
 
 //node used for gossip protocol implementation
 
@@ -28,14 +29,22 @@ public:
 
     std::vector<std::shared_ptr<Message>> getReceivedMessages();
     std::vector<std::shared_ptr<Message>> getSentMessages();
-    void send(std::shared_ptr<Message> message);
+    void sendNode(std::shared_ptr<Message> message);
+    NodeStatus getStatus() const;
 
 private:
     std::string ip;
     int port;
     std::chrono::time_point<std::chrono::system_clock> lastHeartbeat;
 
+    NodeStatus status;
+
+    int socket_fd;
+
     void setLastHeartbeat(int time);
+    void sendJSONMessage(nlohmann::json message);
+    void handleQueue();
+    void handleIncomingMessages();
 
     std::vector<std::shared_ptr<Message>> SentMessages;
     std::vector<std::shared_ptr<Message>> ReceivedMessages;
