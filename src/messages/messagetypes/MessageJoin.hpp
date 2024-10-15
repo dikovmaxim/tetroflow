@@ -11,7 +11,7 @@ class MessageJoin : public Message {
 public:
     std::string node_id;
 
-    MessageJoin(){
+    MessageJoin(std::string node_id) : node_id(node_id) {
         type = MessageType::MESSAGE_JOIN;
         this->PopulateNewMessage();
     }

@@ -23,7 +23,7 @@ public:
 
     void PopulateNewMessage() {
         this->unique_id = generate_unique_id();
-        this->timestamp = std::chrono::system_clock::now();
+        this->timestamp = generate_unique_timestamp();
     }
 
     int GetUniqueId() const {
@@ -31,7 +31,7 @@ public:
     }
 
     int GetTimestamp() const {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()).count();
+        return timestamp;
     }
 
     void SetContent(const nlohmann::json& j) {
@@ -43,12 +43,16 @@ public:
     }
 
     void SetTimestamp(int time) {
-        timestamp = std::chrono::time_point<std::chrono::system_clock>(std::chrono::milliseconds(time));
+        timestamp = generate_unique_timestamp();
+    }
+
+    bool operator==(const Message& other) const {
+        return (unique_id == other.GetUniqueId() && timestamp == other.GetTimestamp());
     }
 
 
 private:
     nlohmann::json content;
     int unique_id;
-    std::chrono::time_point<std::chrono::system_clock> timestamp;
+    int timestamp;
 };

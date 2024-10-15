@@ -45,7 +45,7 @@ void Node::sendJSONMessage(nlohmann::json message) {
 }
 
 //try to connect to the node by ip and port
-void Node::start() {
+void Node::nodeConnect() {
     //create a socket
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (socket_fd == -1) {
@@ -73,11 +73,18 @@ void Node::start() {
 }
 
 //stop the threads
-void Node::stop() {
+void Node::nodeDisconnect() {
     messageQueueThread.~thread();
     incomingMessageThread.~thread();
-    //close the socket
     close(socket_fd);
+}
+
+void Node::start() {
+    nodeConnect();
+}
+
+void Node::stop(){
+    nodeDisconnect();
 }
 
 //add a message to the queue

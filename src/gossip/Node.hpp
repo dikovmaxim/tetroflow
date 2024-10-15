@@ -45,6 +45,8 @@ private:
     void sendJSONMessage(nlohmann::json message);
     void handleQueue();
     void handleIncomingMessages();
+    void nodeConnect();
+    void nodeDisconnect();
 
     std::vector<std::shared_ptr<Message>> SentMessages;
     std::vector<std::shared_ptr<Message>> ReceivedMessages;

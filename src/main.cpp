@@ -26,14 +26,28 @@
 #include "server/Command.hpp"
 #include "server/Operations.hpp"
 #include "server/Server.hpp"
+#include "server/json_fwd.hpp"
 
-
+#include "gossip/Node.hpp"
+#include "messages/messagetypes/MessageJoin.hpp"
 
 
 int main(int argc, char** argv) {
 
     initStorage();
     startTransactionHandling();
+
+    Node* node = new Node("127.0.0.1", 1337);
+    node->start();
+
+    MessageJoin joinMessage("1234");
+    node->addMessageToQueue(std::make_shared<MessageJoin>(joinMessage));
+    std::cout << joinMessage.ToJson().dump() << std::endl;
+
+
+    
+
+
 
     startServer();
 
