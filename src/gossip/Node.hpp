@@ -18,35 +18,36 @@ enum NodeStatus {
     DEAD
 };
 
+enum NodeType {
+    CLIENT,
+    SERVER
+};
+
 class Node {
 public:
-    Node(std::string ip, int port);
-    ~Node();
 
-    void addMessageToQueue(std::shared_ptr<Message> message);
-    void start();
-    void stop();
+    virtual void addMessageToQueue(std::shared_ptr<Message> message) = 0;
+    virtual void start() = 0;
+    virtual void stop() = 0;
 
-    std::vector<std::shared_ptr<Message>> getReceivedMessages();
-    std::vector<std::shared_ptr<Message>> getSentMessages();
-    void sendNode(std::shared_ptr<Message> message);
-    NodeStatus getStatus() const;
+    virtual std::vector<std::shared_ptr<Message>> getReceivedMessages() = 0;
+    virtual std::vector<std::shared_ptr<Message>> getSentMessages() = 0;
+    virtual void sendNode(std::shared_ptr<Message> message) = 0;
+    virtual NodeStatus getStatus() const = 0;
+    virtual NodeType getType() const = 0;
 
 private:
-    std::string ip;
-    int port;
     std::chrono::time_point<std::chrono::system_clock> lastHeartbeat;
 
     NodeStatus status;
 
     int socket_fd;
 
-    void setLastHeartbeat(int time);
-    void sendJSONMessage(nlohmann::json message);
-    void handleQueue();
-    void handleIncomingMessages();
-    void nodeConnect();
-    void nodeDisconnect();
+    virtual void setLastHeartbeat(int time) = 0;
+    virtual void sendJSONMessage(nlohmann::json message) = 0;
+    virtual void handleQueue() = 0;
+    virtual void nodeConnect() = 0;
+    virtual void nodeDisconnect() = 0;
 
     std::vector<std::shared_ptr<Message>> SentMessages;
     std::vector<std::shared_ptr<Message>> ReceivedMessages;

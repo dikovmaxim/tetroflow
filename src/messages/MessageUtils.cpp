@@ -21,7 +21,6 @@ int generate_unique_timestamp() {
     auto now = std::chrono::system_clock::now();
     auto time = std::chrono::system_clock::to_time_t(now);
     std::tm* tm = std::gmtime(&time);
-    timestamp += std::to_string(tm->tm_year).substr(2);
     timestamp += std::to_string(tm->tm_mon);
     timestamp += std::to_string(tm->tm_mday);
     timestamp += std::to_string(tm->tm_hour);

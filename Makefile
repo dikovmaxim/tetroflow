@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++20 -O2 -Wno-unused-parameter
+CXXFLAGS = -std=c++20 -O2 -Wno-unused-parameter -g 
 
 # Add -static to force static linking
 LDFLAGS = -lstdc++ -lm -static

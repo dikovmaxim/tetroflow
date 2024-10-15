@@ -28,7 +28,7 @@
 #include "server/Server.hpp"
 #include "server/json_fwd.hpp"
 
-#include "gossip/Node.hpp"
+#include "gossip/nodes/ClientNode.hpp"
 #include "messages/messagetypes/MessageJoin.hpp"
 
 
@@ -37,14 +37,12 @@ int main(int argc, char** argv) {
     initStorage();
     startTransactionHandling();
 
-    Node* node = new Node("127.0.0.1", 1337);
-    node->start();
 
-    MessageJoin joinMessage("1234");
-    node->addMessageToQueue(std::make_shared<MessageJoin>(joinMessage));
-    std::cout << joinMessage.ToJson().dump() << std::endl;
+    ClientNode clientNode("127.0.0.1", 4444);
+    clientNode.start();
 
-
+    std::shared_ptr<Message> message = std::make_shared<MessageJoin>("1234");
+    clientNode.addMessageToQueue(message);
     
 
 
