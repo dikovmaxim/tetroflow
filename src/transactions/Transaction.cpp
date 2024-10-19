@@ -7,9 +7,13 @@
 
 #include "../log/Logger.hpp"
 #include "../server/Client.hpp"
+#include "../messages/messagetypes/MessageReplicate.hpp"
 
 #include <memory>
 #include <stdexcept>
+#include <iostream>
+#include <string>
+#include <vector>
 
 
 Transaction::Transaction(std::shared_ptr<Table> table, std::function<void(const std::shared_ptr<DataType>, Client&)> callback, Client& client)
@@ -38,6 +42,12 @@ void Transaction::commit() {
     callback(result, client);
     isCommited = true;
     snapshot->merge(table);
+
+    //create a replicate message
+    std::shared_ptr<Message> message = createReplicateMessage(*this);
+    std::cout << message->ToJson().dump() << std::endl;
+
+
 }
 
 void Transaction::rollback() {
@@ -54,6 +64,10 @@ Transaction::~Transaction() {
     }
 }
 
+std::vector<Command> Transaction::getCommands() {
+    return std::vector<Command>(commands.begin(), commands.end());
+}
+
 Transaction makeSingleCommandTransaction(
     Command command,
     std::shared_ptr<Table> table,
@@ -64,3 +78,4 @@ Transaction makeSingleCommandTransaction(
     transaction.addCommand(command);
     return transaction;
 }
+

@@ -11,6 +11,10 @@
 #include <mutex>
 #include <condition_variable>
 
+#include "../GossipManager.hpp"
+#include "../../messages/Message.hpp"
+#include "../../messages/MessageParser.hpp"
+
 //this node is created when a new client connects to the server
 
 ServerNode::ServerNode(int server_socket) {
@@ -58,15 +62,24 @@ void ServerNode::nodeConnect() {
         if (valread == 0) {
             std::cerr << "Client disconnected" << std::endl;
             this->status = NodeStatus::DEAD;
+
+            //call a destructor
+            nodeDisconnect();
+
+            return;
         }
         nlohmann::json j = nlohmann::json::parse(buffer);
         
         std::cout << "Received message: " << j.dump() << std::endl;
+        std::shared_ptr<Message> message = parseMessage(j);
+        std::cout << "Parsed message: " << message->ToString() << std::endl;
     }
 }
 
 void ServerNode::nodeDisconnect() {
     close(socket_fd);
+    removeNode(*this);
+    this->status = NodeStatus::DEAD;
 }
 
 void ServerNode::sendJSONMessage(nlohmann::json message) {
@@ -116,4 +129,16 @@ void ServerNode::sendNode(std::shared_ptr<Message> message) {
     nlohmann::json jsonMessage = message->ToJson();
     sendJSONMessage(jsonMessage);
     SentMessages.push_back(message);
+}
+
+std::string ServerNode::toString() const {
+    return "ServerNode " + std::to_string(socket_fd);
+}
+
+bool ServerNode::compare(const Node& other) const {
+    if(other.getType() != NodeType::SERVER) {
+        return false;
+    }
+    const ServerNode& otherServerNode = dynamic_cast<const ServerNode&>(other);
+    return this->socket_fd == otherServerNode.socket_fd;
 }

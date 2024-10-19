@@ -11,6 +11,8 @@
 #include <mutex>
 #include <condition_variable>
 
+#include "../GossipManager.hpp"
+
 
 ClientNode::ClientNode(std::string ip, int port) {
     this->ip = ip;
@@ -72,6 +74,8 @@ void ClientNode::nodeConnect() {
 
 void ClientNode::nodeDisconnect() {
     close(socket_fd);
+    status = NodeStatus::DEAD;
+    removeNode(*this);
 }
 
 void ClientNode::sendJSONMessage(nlohmann::json message) {
@@ -94,7 +98,7 @@ void ClientNode::handleIncomingMessages() {
             break;
         }
         
-        std::cout << "Received message: " << buffer << std::endl;
+        std::cout << "Received a message: " << buffer << std::endl;
     }
 }
 
@@ -131,4 +135,16 @@ NodeType ClientNode::getType() const {
 
 void ClientNode::setLastHeartbeat(int time) {
     this->lastHeartbeat = std::chrono::system_clock::now();
+}
+
+std::string ClientNode::toString() const {
+    return "Client node at " + ip + ":" + std::to_string(port);
+}
+
+bool ClientNode::compare(const Node& other) const {
+    if (other.getType() != NodeType::CLIENT) {
+        return false;
+    }
+    const ClientNode& otherClient = dynamic_cast<const ClientNode&>(other);
+    return ip == otherClient.ip && port == otherClient.port;
 }

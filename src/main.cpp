@@ -29,8 +29,10 @@
 #include "server/json_fwd.hpp"
 
 #include "gossip/nodes/ClientNode.hpp"
+#include "gossip/GossipServer.hpp"
 #include "messages/messagetypes/MessageJoin.hpp"
 
+#include "gossip/GossipManager.hpp"
 
 int main(int argc, char** argv) {
 
@@ -44,8 +46,9 @@ int main(int argc, char** argv) {
     std::shared_ptr<Message> message = std::make_shared<MessageJoin>("1234");
     clientNode.addMessageToQueue(message);
     
+    startGossipServer();
 
-
+    testGossip();
 
     startServer();
 

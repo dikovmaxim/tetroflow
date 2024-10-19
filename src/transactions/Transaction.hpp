@@ -40,6 +40,7 @@ public:
     void commit();
     void rollback();
     TransactionError getError();
+    std::vector<Command> getCommands();
 };
 
 Transaction makeSingleCommandTransaction(

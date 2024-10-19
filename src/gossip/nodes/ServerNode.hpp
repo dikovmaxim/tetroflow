@@ -21,6 +21,9 @@ public:
     void sendNode(std::shared_ptr<Message> message) override;
     NodeStatus getStatus() const override;
     NodeType getType() const override;
+    std::string toString() const override;
+
+    bool compare(const Node& other) const override;
 
 private:
     std::chrono::time_point<std::chrono::system_clock> lastHeartbeat;

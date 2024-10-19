@@ -19,19 +19,21 @@ public:
     nlohmann::json ToJson() const override {
         nlohmann::json j;
         j["type"] = MessageTypeToString(type);
+        j["unique_id"] = GetUniqueId();
+        j["timestamp"] = GetTimestamp();
         j["content"]["node_id"] = node_id;
-        j["content"]["unique_id"] = GetUniqueId();
-        j["content"]["timestamp"] = GetTimestamp();
         return j;
     }
 
     void FromJson(const nlohmann::json& j) override {
+        std::cout << j.dump() << std::endl;
         try
         {
-            node_id = j.at("content").at("node_id").get<std::string>();
             SetContent(j.at("content"));
-            SetUniqueId(j.at("content").at("unique_id").get<int>());
-            SetTimestamp(j.at("content").at("timestamp").get<int>());
+            SetUniqueId(j.at("unique_id").get<int>());
+            SetTimestamp(j.at("timestamp").get<int>());
+            node_id = j.at("content").at("node_id").get<std::string>();
+            
         }
         catch (std::exception& e)
         {

@@ -35,6 +35,9 @@ public:
     virtual void sendNode(std::shared_ptr<Message> message) = 0;
     virtual NodeStatus getStatus() const = 0;
     virtual NodeType getType() const = 0;
+    virtual std::string toString() const = 0;
+
+    virtual bool compare(const Node& other) const = 0;
 
 private:
     std::chrono::time_point<std::chrono::system_clock> lastHeartbeat;
