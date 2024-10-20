@@ -46,8 +46,8 @@ public:
         timestamp = generate_unique_timestamp();
     }
 
-    bool operator==(const Message& other) const {
-        return (unique_id == other.GetUniqueId() && timestamp == other.GetTimestamp());
+    bool compare(std::shared_ptr<Message> message) {
+        return (this->unique_id == message->GetUniqueId() && this->timestamp == message->GetTimestamp());
     }
 
 

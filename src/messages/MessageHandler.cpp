@@ -16,16 +16,23 @@
 std::condition_variable messageCv; // Condition variable for message queue
 bool stopMessageHandling = false; // Flag to stop message handling
 std::mutex messageQueueMutex; // Mutex for message queue
+
 std::queue<std::shared_ptr<Message>> messages; // Message queue
+std::vector<std::shared_ptr<Message>> messageLog; // Message log
 
 std::thread messageHandlingThread; // Thread for handling messages
 
 void addMessageToExchangeQueue(std::shared_ptr<Message> message) {
+    if(messageInList(message)) {
+        return;
+    }
+
     {
         std::lock_guard<std::mutex> lock(messageQueueMutex);
         messages.push(message);
     }
     messageCv.notify_one(); // Notify the handling thread
+    messageLog.push_back(message);
 }
 
 void messageExchangeQueue() {
@@ -66,9 +73,9 @@ void stopMessageExchangeQueue() {
 }
 
 bool messageInList(std::shared_ptr<Message> message) {
-    std::lock_guard<std::mutex> lock(messageQueueMutex);
-    for (int i = 0; i < messages.size(); i++) {
-        if (messages.front() == message) {
+    //starting from the back of the list, because we put the most recent messages at the back, and we have to do less comparisons
+    for (auto it = messageLog.rbegin(); it != messageLog.rend(); ++it) {
+        if ((*it)->compare(message)) {
             return true;
         }
     }
