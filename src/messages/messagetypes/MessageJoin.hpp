@@ -26,7 +26,6 @@ public:
     }
 
     void FromJson(const nlohmann::json& j) override {
-        std::cout << j.dump() << std::endl;
         try
         {
             SetContent(j.at("content"));

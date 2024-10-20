@@ -75,7 +75,8 @@ void Client::handle() {
         Command command;
 
         try {
-            command = jsonToCommand(std::string(buffer, bytesRead));
+            nlohmann::json json = nlohmann::json::parse(buffer);
+            command = jsonToCommand(json.dump());
         } catch (const std::exception& e) {
             log(LOG_ERROR, std::string("Failed to parse JSON: ") + e.what());
 

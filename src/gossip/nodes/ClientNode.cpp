@@ -12,6 +12,9 @@
 #include <condition_variable>
 
 #include "../GossipManager.hpp"
+#include "../../messages/Message.hpp"
+#include "../../messages/MessageParser.hpp"
+#include "../../messages/MessageHandler.hpp"
 
 
 ClientNode::ClientNode(std::string ip, int port) {
@@ -70,6 +73,8 @@ void ClientNode::nodeConnect() {
 
     incomingMessageThread = std::thread(&ClientNode::handleIncomingMessages, this);
     incomingMessageThread.detach();
+
+    status = NodeStatus::ALIVE;
 }
 
 void ClientNode::nodeDisconnect() {
@@ -97,8 +102,26 @@ void ClientNode::handleIncomingMessages() {
             std::cerr << "Server disconnected" << std::endl;
             break;
         }
-        
-        std::cout << "Received a message: " << buffer << std::endl;
+
+        try
+        {
+
+            std::cout << "Received message: " << buffer << std::endl;
+            
+            nlohmann::json j = nlohmann::json::parse(buffer);
+            std::shared_ptr<Message> message = parseMessage(j);
+
+            std::cout << "Received message: " << message->ToString() << std::endl;
+
+            ReceivedMessages.push_back(message);
+
+            std::cout << "Message added to received messages" << std::endl;
+
+            addMessageToExchangeQueue(message);
+
+            std::cout << "Message added to exchange queue" << std::endl;
+
+        } catch (const std::exception& e) {}
     }
 }
 

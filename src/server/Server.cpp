@@ -54,8 +54,16 @@ void startServer() {
 
     sockaddr_un address;
     address.sun_family = AF_UNIX;
-    strcpy(address.sun_path, SOCKET_PATH);
-    unlink(SOCKET_PATH);
+
+    std::string path = SOCKET_PATH;
+
+    // Check if the path already exists and modify it if necessary
+    if (access(path.c_str(), F_OK) == 0) {
+        path += "1";
+    }
+
+    strcpy(address.sun_path, path.c_str());
+    unlink(path.c_str());
 
     if (bind(serverSocket, (sockaddr*)&address, sizeof(address)) == -1) {
         log(LOG_ERROR, "Failed to bind server socket");
@@ -69,7 +77,7 @@ void startServer() {
         return;
     }
 
-    log(LOG_INFO, "Server started");
+    log(LOG_INFO, "Server started on " + path);
     while (true) {
         int clientSocket = accept(serverSocket, nullptr, nullptr);
         if (clientSocket == -1) {

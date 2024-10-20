@@ -13,6 +13,7 @@
 
 #include "messagetypes/MessageJoin.hpp"
 #include "messagetypes/MessageLeave.hpp"
+#include "messagetypes/MessageReplicate.hpp"
 
 
 std::shared_ptr<Message> parseMessage(nlohmann::json message){
@@ -27,15 +28,13 @@ std::shared_ptr<Message> parseMessage(nlohmann::json message){
                 joinMessage.FromJson(message);
                 return std::make_shared<MessageJoin>(joinMessage);
             }
-
-            case MessageType::MESSAGE_LEAVE:
-            {
-                MessageLeave leaveMessage = MessageLeave();
-                leaveMessage.FromJson(message);
-                return std::make_shared<MessageLeave>(leaveMessage);
-            }
-
             
+            case MessageType::MESSAGE_REPLICATE:
+            {
+                MessageReplicate replicateMessage = MessageReplicate();
+                replicateMessage.FromJson(message);
+                return std::make_shared<MessageReplicate>(replicateMessage);
+            }
 
             default:
                 throw std::invalid_argument("Invalid message type");
@@ -43,6 +42,7 @@ std::shared_ptr<Message> parseMessage(nlohmann::json message){
     }
     catch (const std::exception& e)
     {
+        std::cout << e.what() << std::endl;
         throw std::invalid_argument("Invalid message");
     }
 }

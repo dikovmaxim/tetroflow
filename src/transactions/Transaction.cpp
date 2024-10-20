@@ -8,6 +8,7 @@
 #include "../log/Logger.hpp"
 #include "../server/Client.hpp"
 #include "../messages/messagetypes/MessageReplicate.hpp"
+#include "../messages/MessageHandler.hpp"
 
 #include <memory>
 #include <stdexcept>
@@ -45,9 +46,7 @@ void Transaction::commit() {
 
     //create a replicate message
     std::shared_ptr<Message> message = createReplicateMessage(*this);
-    std::cout << message->ToJson().dump() << std::endl;
-
-
+    addMessageToExchangeQueue(message);
 }
 
 void Transaction::rollback() {

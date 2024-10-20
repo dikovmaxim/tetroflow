@@ -39,6 +39,16 @@ public:
 
     virtual bool compare(const Node& other) const = 0;
 
+    nlohmann::json toJson() const {
+        nlohmann::json j;
+        j["status"] = status;
+        j["type"] = getType();
+        j["lastHeartbeat"] = 0;
+        j["sentMessages"] = SentMessages.size();
+        j["receivedMessages"] = ReceivedMessages.size();
+        return j;
+    }
+
 private:
     std::chrono::time_point<std::chrono::system_clock> lastHeartbeat;
 

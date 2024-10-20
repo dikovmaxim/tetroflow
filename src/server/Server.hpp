@@ -1,3 +1,3 @@
-#define SOCKET_PATH "/tmp/tetroflow.sock"
+#define SOCKET_PATH "/tmp/tetroflow"
 void startServer();
 void removeClientBySocket(int socket);

@@ -33,19 +33,23 @@ public:
     }
 
     void FromJson(const nlohmann::json& j) override {
+        std::cout << j.dump() << " is a replicate message" << std::endl;
         try
         {
-            SetContent(j.at("content"));
-            SetUniqueId(j.at("content").at("unique_id").get<int>());
-            SetTimestamp(j.at("content").at("timestamp").get<int>());
-            for (auto command : j.at("content").at("commands")){
+            SetUniqueId(j.at("unique_id").get<int>());
+            SetTimestamp(j.at("timestamp").get<int>());
+            for (const auto& command : j.at("content").at("commands")) {
+                std::cout << command.dump() << " is a command" << std::endl;
+                //Command jsonToCommand(const std::string& json) {
                 Command c = jsonToCommand(command.dump());
                 commands.push_back(c);
+                std::cout << c.json.dump() << " is a parsed command" << std::endl;
             }
         }
         catch (std::exception& e)
         {
-            throw std::invalid_argument("Invalid JSON for message leave");
+            std::cout << e.what() << std::endl;
+            throw std::invalid_argument("Invalid JSON for message replicate");
         }
     }
 

@@ -17,7 +17,8 @@ enum class DataTypeType {
     GEO = 12,
     BOOLEAN = 14,
     UNDEFINED = 15,
-    ERROR = 16
+    ERROR = 16,
+    JSON = 17,
 };
 
 std::string DataTypeType_to_string(DataTypeType type);

@@ -19,6 +19,13 @@ namespace operations {
     std::shared_ptr<DataType> keys(std::shared_ptr<Table> table);
     std::shared_ptr<DataType> type(std::shared_ptr<Table> table, int key);
 
+    namespace service {
+
+        std::shared_ptr<DataType> ping();
+
+        std::shared_ptr<DataType> getnodes();
+
+    }
 
     namespace string {
 

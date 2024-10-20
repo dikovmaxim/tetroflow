@@ -26,29 +26,24 @@
 // Refactor Command class to handle arguments as a single object with key-value pairs
 
 
-Command jsonToCommand(const std::string json) {
-    // Parse the JSON string, if not possible, throw an exception
+Command jsonToCommand(const std::string& json) {
     nlohmann::json j;
     Command command;
     std::string type;
 
     try {
         j = nlohmann::json::parse(json);
-        type = j["command"];
+        type = j.at("command").get<std::string>();
     } catch (const std::exception& e) {
         throw std::invalid_argument("Invalid JSON");
     }
 
-
     command.json = j;
-
-    // Convert the command type to a CommandType enum
     command.type = stringToCommandType(type);
 
-    // Get the arguments from the JSON object as key-value pairs
     if (j.contains("arguments") && j["arguments"].is_object()) {
         for (auto& param : j["arguments"].items()) {
-            command.args[param.key()] = param.value();  // Store each key-value pair in args map
+            command.args[param.key()] = param.value();
         }
     }
 
@@ -239,7 +234,11 @@ std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table>
         }
 
         case CommandType::PING: {
-            return std::make_shared<String>("PONG");
+            return operations::service::ping();
+        }
+
+        case CommandType::GETNODES: {
+            return operations::service::getnodes();
         }
 
     }

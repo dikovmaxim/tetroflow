@@ -8,7 +8,7 @@
 #include <vector>
 #include <chrono>
 
-class ClientNode : public Node {
+class ClientNode : public Node, public std::enable_shared_from_this<ClientNode> {
 public:
     ClientNode(std::string ip, int port);
 
@@ -24,6 +24,10 @@ public:
     std::string toString() const override;
 
     bool compare(const Node& other) const override;
+
+    std::weak_ptr<ClientNode> getSharedPtr() {
+        return shared_from_this();
+    }
 
 private:
     std::string ip;

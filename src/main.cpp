@@ -31,6 +31,7 @@
 #include "gossip/nodes/ClientNode.hpp"
 #include "gossip/GossipServer.hpp"
 #include "messages/messagetypes/MessageJoin.hpp"
+#include "messages/MessageHandler.hpp"
 
 #include "gossip/GossipManager.hpp"
 
@@ -40,15 +41,14 @@ int main(int argc, char** argv) {
     startTransactionHandling();
 
 
-    ClientNode clientNode("127.0.0.1", 4444);
-    clientNode.start();
+    std::shared_ptr<Node> node = connectToNode("127.0.0.1", 4444);
 
     std::shared_ptr<Message> message = std::make_shared<MessageJoin>("1234");
-    clientNode.addMessageToQueue(message);
+    node->addMessageToQueue(message);
+
+    startMessageExchangeQueue();
     
     startGossipServer();
-
-    testGossip();
 
     startServer();
 

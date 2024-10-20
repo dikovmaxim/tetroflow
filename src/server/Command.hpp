@@ -12,8 +12,11 @@
 
 enum CommandType {
 
+    //service commands
     PING,
+    GETNODES,
 
+    //data commands
     GET,
     SET,
     DEL,
@@ -64,11 +67,12 @@ struct Command {
 };
 
 std::shared_ptr<DataType> executeCommand(Command command, std::shared_ptr<Table> table);
-Command jsonToCommand(const std::string json);
+Command jsonToCommand(const std::string& json);
 
 inline CommandType stringToCommandType(std::string type){
 
     if (type == "PING") return CommandType::PING;
+    if (type == "GETNODES") return CommandType::GETNODES;
 
     if (type == "GET") return CommandType::GET;
     if (type == "SET") return CommandType::SET;

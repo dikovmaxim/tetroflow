@@ -1,5 +1,6 @@
 #include "GossipManager.hpp"
 #include "Node.hpp"
+#include "nodes/ClientNode.hpp"
 
 #include <iostream>
 #include <string>
@@ -7,6 +8,7 @@
 #include <memory>
 #include <thread>
 #include <chrono>
+
 
 std::vector<std::shared_ptr<Node>> nodes;
 
@@ -35,4 +37,23 @@ void gossip() {
 
 void testGossip() {
 
+}
+
+std::vector<std::shared_ptr<Node>> getNodes() {
+    return nodes;
+}
+
+void broadcastMessage(std::shared_ptr<Message> message) {
+    for (auto& node : nodes) {
+        std::cout << "Sending message to " << node->toString() << std::endl;
+        node->addMessageToQueue(message);
+    }
+}
+
+std::shared_ptr<Node> connectToNode(std::string ip, int port) {
+    // Create a new client node
+    std::shared_ptr<Node> node = std::make_shared<ClientNode>(ip, port);
+    addNode(node);
+    node->start();
+    return node;
 }

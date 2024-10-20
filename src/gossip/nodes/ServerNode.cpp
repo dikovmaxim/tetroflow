@@ -14,6 +14,9 @@
 #include "../GossipManager.hpp"
 #include "../../messages/Message.hpp"
 #include "../../messages/MessageParser.hpp"
+#include "../../messages/MessageHandler.hpp"
+#include "../../log/Logger.hpp"
+
 
 //this node is created when a new client connects to the server
 
@@ -30,6 +33,7 @@ void ServerNode::addMessageToQueue(std::shared_ptr<Message> message) {
     {
         std::lock_guard<std::mutex> lock(serverNodeMessageQueueMutex);
         messageQueue.push(message);
+        log(LOG_INFO, "Message added to queue " + message->ToString());
     }
     serverNodeCvQueue.notify_one(); // Notify the handling thread
 }
@@ -48,6 +52,7 @@ void ServerNode::handleQueue() {
             messageQueue.pop();
         }
         if (message) {
+            log(LOG_INFO, "Message sent to client: " + message->ToString());
             sendNode(message);
         }
     }
@@ -68,11 +73,26 @@ void ServerNode::nodeConnect() {
 
             return;
         }
-        nlohmann::json j = nlohmann::json::parse(buffer);
-        
-        std::cout << "Received message: " << j.dump() << std::endl;
-        std::shared_ptr<Message> message = parseMessage(j);
-        std::cout << "Parsed message: " << message->ToString() << std::endl;
+
+        try
+        {
+
+            std::cout << "Received message: " << buffer << std::endl;
+            
+            nlohmann::json j = nlohmann::json::parse(buffer);
+            std::shared_ptr<Message> message = parseMessage(j);
+
+            std::cout << "Received message: " << message->ToString() << std::endl;
+
+            ReceivedMessages.push_back(message);
+
+            std::cout << "Message added to received messages" << std::endl;
+
+            addMessageToExchangeQueue(message);
+
+            std::cout << "Message added to exchange queue" << std::endl;
+
+        } catch (const std::exception& e) {}
     }
 }
 

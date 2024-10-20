@@ -50,6 +50,10 @@ std::string DataTypeType_to_string(DataTypeType type) {
             return "ERROR";
         case DataTypeType::BOOLEAN:
             return "BOOLEAN";
+        case DataTypeType::UNDEFINED:
+            return "UNDEFINED";
+        case DataTypeType::JSON:
+            return "JSON";
     }
     return "UNKNOWN";
 }
@@ -64,6 +68,8 @@ DataTypeType stringToDataTypeType(std::string type) {
     if(type == "SORTEDSET") return DataTypeType::SORTEDSET;
     if(type == "BOOLEAN") return DataTypeType::BOOLEAN;
     if(type == "STRING") return DataTypeType::STRING;
+    if(type == "ERROR") return DataTypeType::ERROR;
+    if(type == "JSON") return DataTypeType::JSON;
 
     return DataTypeType::UNDEFINED;
 }
