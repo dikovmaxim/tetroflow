@@ -14,6 +14,7 @@
 class Client{
 public:
     Client(int socket);
+    Client();
     ~Client();
     void handle();
     void send(const nlohmann::json& json);

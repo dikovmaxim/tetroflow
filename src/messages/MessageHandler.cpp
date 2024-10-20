@@ -5,6 +5,13 @@
 #include "MessageUtils.hpp"
 #include "../server/json_fwd.hpp"
 #include "../gossip/GossipManager.hpp"
+#include "../gossip/nodes/ClientNode.hpp"
+#include "../transactions/Transaction.hpp"
+#include "../transactions/TransactionManager.hpp"
+#include "../table/Table.hpp"
+#include "../server/Command.hpp"
+#include "../Global.hpp"
+#include "messagetypes/MessageReplicate.hpp"
 
 #include <iostream>
 #include <mutex>
@@ -22,9 +29,27 @@ std::vector<std::shared_ptr<Message>> messageLog; // Message log
 
 std::thread messageHandlingThread; // Thread for handling messages
 
+void EmptyCallback(const std::shared_ptr<DataType>, Client&) {}
+
+std::shared_ptr<Client> emptyClient = std::make_shared<Client>();
+
+std::shared_ptr<Transaction> createTransaction(std::shared_ptr<MessageReplicate> message) {
+    std::shared_ptr<Transaction> transaction = std::make_shared<Transaction>(coreTable, EmptyCallback, *emptyClient);
+    for (auto command : message->getCommands()) {
+        transaction->addCommand(command);
+    }
+    return transaction;
+}
+
 void addMessageToExchangeQueue(std::shared_ptr<Message> message) {
     if(messageInList(message)) {
         return;
+    }
+
+    if(message->GetType() == MessageType::MESSAGE_REPLICATE) {
+        std::shared_ptr<MessageReplicate> replicateMessage = std::dynamic_pointer_cast<MessageReplicate>(message);
+        std::shared_ptr<Transaction> transaction = createTransaction(replicateMessage);
+        addTransaction(transaction);
     }
 
     {

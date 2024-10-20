@@ -40,13 +40,14 @@ void Transaction::commit() {
             callback(std::make_shared<Error>(std::string("An error occurred during the execution of the command. Error: ") + e.what()), client);
         }
     }
-    callback(result, client);
+    if (client.getSocket() > 0)
+    {
+        callback(result, client);
+    }
+    
     isCommited = true;
     snapshot->merge(table);
-
-    //create a replicate message
-    std::shared_ptr<Message> message = createReplicateMessage(*this);
-    addMessageToExchangeQueue(message);
+    
 }
 
 void Transaction::rollback() {

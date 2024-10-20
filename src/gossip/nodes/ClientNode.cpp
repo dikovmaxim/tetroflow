@@ -111,8 +111,6 @@ void ClientNode::handleIncomingMessages() {
             nlohmann::json j = nlohmann::json::parse(buffer);
             std::shared_ptr<Message> message = parseMessage(j);
 
-            std::cout << "Received message: " << message->ToString() << std::endl;
-
             ReceivedMessages.push_back(message);
 
             std::cout << "Message added to received messages" << std::endl;

@@ -61,6 +61,10 @@ public:
         return type;
     }
 
+    std::vector<Command> getCommands() const {
+        return commands;
+    }
+
     ~MessageReplicate() override = default;
 };
 
