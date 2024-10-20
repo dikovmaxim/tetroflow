@@ -65,7 +65,7 @@ void ServerNode::nodeConnect() {
         char buffer[2048] = {0};
         int valread = read(socket_fd, buffer, 1024);
         if (valread == 0) {
-            std::cerr << "Client disconnected" << std::endl;
+            log(LOG_INFO, "Server node disconnected");
             this->status = NodeStatus::DEAD;
 
             //call a destructor
@@ -77,20 +77,12 @@ void ServerNode::nodeConnect() {
         try
         {
 
-            std::cout << "Received message: " << buffer << std::endl;
-            
             nlohmann::json j = nlohmann::json::parse(buffer);
             std::shared_ptr<Message> message = parseMessage(j);
 
-            std::cout << "Received message: " << message->ToString() << std::endl;
-
             ReceivedMessages.push_back(message);
 
-            std::cout << "Message added to received messages" << std::endl;
-
             addMessageToExchangeQueue(message);
-
-            std::cout << "Message added to exchange queue" << std::endl;
 
         } catch (const std::exception& e) {}
     }

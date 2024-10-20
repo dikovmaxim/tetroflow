@@ -42,7 +42,6 @@ std::shared_ptr<Message> parseMessage(nlohmann::json message){
     }
     catch (const std::exception& e)
     {
-        std::cout << e.what() << std::endl;
         throw std::invalid_argument("Invalid message");
     }
 }

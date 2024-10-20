@@ -27,12 +27,6 @@ void removeNode(Node& node) {
 }
 
 void gossip() {
-    while (true) {
-        for (auto& node : nodes) {
-            std::cout << "Gossiping with " << node->toString() << std::endl;
-        }
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
 }
 
 void testGossip() {
@@ -45,7 +39,6 @@ std::vector<std::shared_ptr<Node>> getNodes() {
 
 void broadcastMessage(std::shared_ptr<Message> message) {
     for (auto& node : nodes) {
-        std::cout << "Sending message to " << node->toString() << std::endl;
         node->addMessageToQueue(message);
     }
 }

@@ -15,6 +15,7 @@
 #include "../../messages/Message.hpp"
 #include "../../messages/MessageParser.hpp"
 #include "../../messages/MessageHandler.hpp"
+#include "../../log/Logger.hpp"
 
 
 ClientNode::ClientNode(std::string ip, int port) {
@@ -58,7 +59,7 @@ void ClientNode::nodeConnect() {
     struct sockaddr_in serv_addr;
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (socket_fd < 0) {
-        std::cerr << "Error creating socket" << std::endl;
+        log(LOG_ERROR, "Error creating socket for client node");
         return;
     }
 
@@ -67,7 +68,7 @@ void ClientNode::nodeConnect() {
     inet_pton(AF_INET, ip.c_str(), &serv_addr.sin_addr);
 
     if (connect(socket_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-        std::cerr << "Error connecting to server" << std::endl;
+        log(LOG_ERROR, "Connection failed for client node");
         return;
     }
 
@@ -99,25 +100,20 @@ void ClientNode::handleIncomingMessages() {
     while (true) {
         int valread = read(socket_fd, buffer, 1024);
         if (valread == 0 || valread < 0) {
-            std::cerr << "Server disconnected" << std::endl;
+            log(LOG_INFO, "Client node disconnected");
+            this->status = NodeStatus::DEAD;
+            nodeDisconnect();
             break;
         }
-
         try
         {
-
-            std::cout << "Received message: " << buffer << std::endl;
             
             nlohmann::json j = nlohmann::json::parse(buffer);
             std::shared_ptr<Message> message = parseMessage(j);
 
             ReceivedMessages.push_back(message);
 
-            std::cout << "Message added to received messages" << std::endl;
-
             addMessageToExchangeQueue(message);
-
-            std::cout << "Message added to exchange queue" << std::endl;
 
         } catch (const std::exception& e) {}
     }

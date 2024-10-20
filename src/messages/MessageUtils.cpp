@@ -27,7 +27,5 @@ int generate_unique_timestamp() {
     timestamp += std::to_string(tm->tm_min);
     timestamp += std::to_string(tm->tm_sec);
 
-    std::cout << "Timestamp: " << timestamp << std::endl;
-
     return std::stoi(timestamp);
 }

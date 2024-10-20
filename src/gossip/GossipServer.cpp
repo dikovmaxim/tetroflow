@@ -30,10 +30,10 @@ void GossipServerHandler(int server_socket) {
     int addrlen = sizeof(address);
     while (true) {
         if ((new_socket = accept(server_socket, (struct sockaddr *)&address, (socklen_t *)&addrlen)) < 0) {
-            std::cerr << "Accept failed" << std::endl;
+            log(LOG_ERROR, "Accept failed on gossip server listening to socket " + std::to_string(server_socket));
             return;
         }
-        log(LOG_INFO, "New client connected");
+        log(LOG_INFO, "New gossip server connection as client");
 
         std::shared_ptr<ServerNode> serverNode = std::make_shared<ServerNode>(new_socket);
         serverNode->start();
@@ -49,18 +49,18 @@ void startGossipServer() {
     int opt = 1;
     int addrlen = sizeof(address);
     if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        std::cerr << "Socket failed" << std::endl;
+        log(LOG_ERROR, "Gossip server socket creation failed");
         return;
     }
     if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
-        std::cerr << "Setsockopt failed" << std::endl;
+        log(LOG_ERROR, "Gossip server setsockopt failed");
         return;
     }
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(4444);
     if (bind(server_socket, (struct sockaddr *)&address, sizeof(address)) < 0) {
-        std::cerr << "Bind failed" << std::endl;
+        log(LOG_ERROR, "Gossip server bind failed");
         return;
     }
     gossipServerThread = std::thread(GossipServerHandler, server_socket);
