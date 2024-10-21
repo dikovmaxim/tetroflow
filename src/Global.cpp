@@ -25,9 +25,9 @@
 std::shared_ptr<Table> coreTable;
 
 // Define the initStorage function
-void initStorage() {
+void initStorage(int reserveSize) {
     // Create a new Table object
-    coreTable = std::make_shared<Table>(100);
+    coreTable = std::make_shared<Table>(reserveSize);
     // Log that the storage has been initialized
     log(LOG_INFO, "Storage initialized");
 }

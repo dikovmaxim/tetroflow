@@ -9,4 +9,4 @@
 extern std::shared_ptr<Table> coreTable;
 
 
-void initStorage();
+void initStorage(int reserveSize);

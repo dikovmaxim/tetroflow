@@ -23,7 +23,6 @@
 std::thread gossipServerThread;
 
 void GossipServerHandler(int server_socket) {
-
     listen(server_socket, 3);
     int new_socket;
     struct sockaddr_in address;
@@ -42,8 +41,7 @@ void GossipServerHandler(int server_socket) {
     }
 }
 
-void startGossipServer() {
-
+void startGossipServer(std::string ip, int port) {
     int server_socket;
     struct sockaddr_in address;
     int opt = 1;
@@ -57,12 +55,13 @@ void startGossipServer() {
         return;
     }
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(4444);
+    address.sin_addr.s_addr = inet_addr(ip.c_str());
+    address.sin_port = htons(port);
     if (bind(server_socket, (struct sockaddr *)&address, sizeof(address)) < 0) {
         log(LOG_ERROR, "Gossip server bind failed");
         return;
     }
+    log(LOG_INFO, "Gossip server listening on " + ip + ":" + std::to_string(port));
     gossipServerThread = std::thread(GossipServerHandler, server_socket);
 }
 

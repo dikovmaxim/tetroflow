@@ -14,6 +14,7 @@
 #include <list>
 #include <tuple>
 #include <thread>
+#include <string>
 
 #include "Global.hpp"
 #include "log/Logger.hpp"
@@ -35,22 +36,59 @@
 
 #include "gossip/GossipManager.hpp"
 
+#include "config/ConfigParser.hpp"
+
 int main(int argc, char** argv) {
 
-    initStorage();
+    std::string configFile = "tetroflow.cfg";
+
+    //if 1 argument is passed, it is the config file
+    if (argc == 2) {
+        configFile = std::string(argv[1]);
+    }
+
+    std::string replicateListenInterface = "0.0.0.0";
+    int replicateListenPort = 2732;
+
+    std::string socketPath = "/tmp/tetroflow";
+
+    std::vector<std::string> replicateConnect = {};
+
+    int tableReserveSize = 1000;
+
+    try {
+        ConfigParser config(configFile);
+
+        socketPath = config.getString("socket");
+
+        std::string replicateListen = config.getString("replicateListen");
+        replicateListenInterface = replicateListen.substr(0, replicateListen.find(':'));
+        replicateListenPort = std::stoi(replicateListen.substr(replicateListen.find(':') + 1));
+
+        replicateConnect = config.getList("replicateConnect");
+
+        tableReserveSize = config.getInt("tableReserveSize");
+
+    } catch (const std::exception& ex) {
+        log(LOG_ERROR, "Error parsing configuration file: " + std::string(ex.what()));
+        return -1;
+    }
+
+    initStorage(tableReserveSize);
     startTransactionHandling();
 
-
-    std::shared_ptr<Node> node = connectToNode("127.0.0.1", 4444);
-
-    std::shared_ptr<Message> message = std::make_shared<MessageJoin>("1234");
-    node->addMessageToQueue(message);
+    for (const std::string& connect : replicateConnect) {
+        std::string ip = connect.substr(0, connect.find(':'));
+        int port = std::stoi(connect.substr(connect.find(':') + 1));
+        std::shared_ptr<Node> node = connectToNode(ip, port);
+        addNode(node);
+    }
 
     startMessageExchangeQueue();
     
-    startGossipServer();
+    startGossipServer(replicateListenInterface, replicateListenPort);
 
-    startServer();
+    startServer(socketPath);
 
     return 0;
 }

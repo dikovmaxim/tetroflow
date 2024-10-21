@@ -6,6 +6,8 @@
 #include <cstring>
 #include <vector>
 #include <memory>
+#include <chrono>
+#include <string>
 
 #include "Server.hpp"
 #include "../log/Logger.hpp"
@@ -34,7 +36,7 @@ void removeClientBySocket(int socket) {
 }
 
 //the server socket is reusable .sock file
-void startServer() {
+void startServer(std::string path) {
 
     //std::thread tt = std::thread(printClients);
     //tt.detach();
@@ -54,13 +56,6 @@ void startServer() {
 
     sockaddr_un address;
     address.sun_family = AF_UNIX;
-
-    std::string path = SOCKET_PATH;
-
-    // Check if the path already exists and modify it if necessary
-    if (access(path.c_str(), F_OK) == 0) {
-        path += "1";
-    }
 
     strcpy(address.sun_path, path.c_str());
     unlink(path.c_str());

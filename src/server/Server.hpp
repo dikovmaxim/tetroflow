@@ -1,3 +1,4 @@
-#define SOCKET_PATH "/tmp/tetroflow"
-void startServer();
+#pragma once
+#include <string>
+void startServer(std::string socketPath);
 void removeClientBySocket(int socket);
