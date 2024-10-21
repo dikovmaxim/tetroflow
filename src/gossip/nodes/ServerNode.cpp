@@ -33,7 +33,6 @@ void ServerNode::addMessageToQueue(std::shared_ptr<Message> message) {
     {
         std::lock_guard<std::mutex> lock(serverNodeMessageQueueMutex);
         messageQueue.push(message);
-        log(LOG_INFO, "Message added to queue " + message->ToString());
     }
     serverNodeCvQueue.notify_one(); // Notify the handling thread
 }
@@ -52,7 +51,6 @@ void ServerNode::handleQueue() {
             messageQueue.pop();
         }
         if (message) {
-            log(LOG_INFO, "Message sent to client: " + message->ToString());
             sendNode(message);
         }
     }

@@ -68,7 +68,7 @@ void ClientNode::nodeConnect() {
     inet_pton(AF_INET, ip.c_str(), &serv_addr.sin_addr);
 
     if (connect(socket_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-        log(LOG_ERROR, "Connection failed for client node");
+        log(LOG_ERROR, "Connection failed for client node at " + ip + ":" + std::to_string(port));
         return;
     }
 

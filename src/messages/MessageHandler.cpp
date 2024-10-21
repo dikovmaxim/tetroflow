@@ -71,15 +71,12 @@ void messageExchangeQueue() {
         if (stopMessageHandling) {
             return; // Exit loop when stop flag is set
         }
-
-        log(LOG_INFO, "Handling message"); // Log every time after waking up
         
         while (!messages.empty()) {
             std::shared_ptr<Message> message = messages.front();
             messages.pop();
             
             if (message) {
-                log(LOG_INFO, "Message: " + message->ToString());
                 broadcastMessage(message);
             }
         }
