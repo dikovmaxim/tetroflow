@@ -16,6 +16,9 @@
 #include <thread>
 #include <string>
 
+#include <stdlib.h>
+#include <signal.h>
+
 #include "Global.hpp"
 #include "log/Logger.hpp"
 #include "table/Table.hpp"
@@ -36,6 +39,8 @@
 #include "gossip/GossipManager.hpp"
 
 #include "config/ConfigParser.hpp"
+
+#include "signals/Signals.hpp"
 
 int main(int argc, char** argv) {
 
@@ -79,6 +84,14 @@ int main(int argc, char** argv) {
         log(LOG_ERROR, "Error parsing configuration file: " + std::string(ex.what()));
         return -1;
     }
+
+    signal(SIGSEGV, sig_handler);
+    signal (SIGABRT, sig_handler);
+    signal (SIGFPE, sig_handler);
+    signal (SIGILL, sig_handler);
+    signal (SIGINT, sig_handler);
+    signal (SIGSEGV, sig_handler);
+    signal (SIGTERM, sig_handler);
 
     initStorage(tableReserveSize);
 

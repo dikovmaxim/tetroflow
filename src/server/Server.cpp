@@ -16,11 +16,12 @@
 #include "../transactions/Transaction.hpp"
 #include "../transactions/TransactionManager.hpp"
 
-
+bool serverRunning = true;
 std::vector<std::shared_ptr<Client>> clients;
+std::thread serverThread;
 
 void printClients() {
-    while (1) {
+    while (serverRunning) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         log(LOG_INFO, "Number of clients: " + std::to_string(clients.size()));
     }
@@ -37,10 +38,6 @@ void removeClientBySocket(int socket) {
 
 //the server socket is reusable .sock file
 void startServer(std::string path) {
-
-    //std::thread tt = std::thread(printClients);
-    //tt.detach();
-
     int serverSocket = socket(AF_UNIX, SOCK_STREAM, 0);
     if (serverSocket == -1) {
         log(LOG_ERROR, "Failed to create server socket");
@@ -73,7 +70,7 @@ void startServer(std::string path) {
     }
 
     log(LOG_INFO, "Server started on " + path);
-    while (true) {
+    while (serverRunning) {
         int clientSocket = accept(serverSocket, nullptr, nullptr);
         if (clientSocket == -1) {
             log(LOG_ERROR, "Failed to accept client connection");
@@ -83,4 +80,22 @@ void startServer(std::string path) {
         std::shared_ptr<Client> client = std::make_shared<Client>(clientSocket);
         clients.push_back(client);
     }
+
+    close(serverSocket);
 }
+
+void runServer(std::string path) {
+    serverThread = std::thread(startServer, path);
+}
+
+void stopServer() {
+    serverRunning = false;
+    for (auto client : clients) {
+        client->closeSocket();
+    }
+    if (serverThread.joinable()) {
+        serverThread.join();
+    }
+    log(LOG_INFO, "Server stopped");
+}
+

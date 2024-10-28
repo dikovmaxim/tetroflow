@@ -91,7 +91,8 @@
     "semaphore": "cpp",
     "cinttypes": "cpp",
     "text_encoding": "cpp",
-    "fstream": "cpp"
+    "fstream": "cpp",
+    "csignal": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

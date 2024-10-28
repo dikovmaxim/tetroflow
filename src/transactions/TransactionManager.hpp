@@ -9,3 +9,4 @@
 
 void addTransaction(std::shared_ptr<Transaction> transaction);
 void startTransactionHandling();
+void stopTransactionHandling();

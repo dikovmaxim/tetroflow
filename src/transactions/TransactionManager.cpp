@@ -56,6 +56,8 @@ void startTransactionHandling() {
 void stopTransactionHandling() {
     stopHandling = true;
     cv.notify_one();
-    handlingThread.join();
+    if (handlingThread.joinable()) {
+        handlingThread.join();
+    }
     log(LOG_INFO, "Stopped transaction handling");
 }
