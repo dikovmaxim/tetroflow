@@ -37,6 +37,8 @@ public:
     virtual NodeType getType() const = 0;
     virtual std::string toString() const = 0;
 
+    void handleIncomingMessage(nlohmann::json j);
+
     virtual bool compare(const Node& other) const = 0;
 
     nlohmann::json toJson() const {

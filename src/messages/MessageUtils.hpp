@@ -1,4 +1,7 @@
 #pragma once
 
+#include <cstdint>
+#include <memory>
+
 int generate_unique_id();
-int generate_unique_timestamp();
+int64_t generate_unique_timestamp();

@@ -31,7 +31,6 @@
 
 #include "gossip/nodes/ClientNode.hpp"
 #include "gossip/GossipServer.hpp"
-#include "messages/messagetypes/MessageJoin.hpp"
 #include "messages/MessageHandler.hpp"
 
 #include "gossip/GossipManager.hpp"
@@ -69,20 +68,21 @@ int main(int argc, char** argv) {
 
         tableReserveSize = config.getInt("tableReserveSize");
 
+        for (const std::string& connect : replicateConnect) {
+            std::string ip = connect.substr(0, connect.find(':'));
+            int port = std::stoi(connect.substr(connect.find(':') + 1));
+            std::shared_ptr<Node> node = connectToNode(ip, port);
+            addNode(node);
+        }
+
     } catch (const std::exception& ex) {
         log(LOG_ERROR, "Error parsing configuration file: " + std::string(ex.what()));
         return -1;
     }
 
     initStorage(tableReserveSize);
-    startTransactionHandling();
 
-    for (const std::string& connect : replicateConnect) {
-        std::string ip = connect.substr(0, connect.find(':'));
-        int port = std::stoi(connect.substr(connect.find(':') + 1));
-        std::shared_ptr<Node> node = connectToNode(ip, port);
-        addNode(node);
-    }
+    startTransactionHandling();
 
     startMessageExchangeQueue();
     

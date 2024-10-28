@@ -109,11 +109,7 @@ void ClientNode::handleIncomingMessages() {
         {
             
             nlohmann::json j = nlohmann::json::parse(buffer);
-            std::shared_ptr<Message> message = parseMessage(j);
-
-            ReceivedMessages.push_back(message);
-
-            addMessageToExchangeQueue(message);
+            this->handleIncomingMessage(j);
 
         } catch (const std::exception& e) {}
     }

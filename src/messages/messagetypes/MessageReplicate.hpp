@@ -23,7 +23,7 @@ public:
         nlohmann::json j;
         j["type"] = MessageTypeToString(type);
         j["unique_id"] = GetUniqueId();
-        j["timestamp"] = GetTimestamp();
+        j["timestamp"] = std::to_string(GetTimestamp());
         j["content"]["commands"] = nlohmann::json::array();
         for (auto command : commands){
             j["content"]["commands"].push_back(command.json);
@@ -36,9 +36,8 @@ public:
         try
         {
             SetUniqueId(j.at("unique_id").get<int>());
-            SetTimestamp(j.at("timestamp").get<int>());
+            SetTimestamp(std::stol(j.at("timestamp").get<std::string>()));
             for (const auto& command : j.at("content").at("commands")) {
-                //Command jsonToCommand(const std::string& json) {
                 Command c = jsonToCommand(command.dump());
                 commands.push_back(c);
             }
