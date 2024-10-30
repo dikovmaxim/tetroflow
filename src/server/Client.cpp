@@ -98,6 +98,10 @@ void Client::handle() {
             continue;
         }
 
+        //clean the buffer
+        memset(buffer, 0, READ_BUFFER_SIZE);
+        
+
         
         Transaction transaction = makeSingleCommandTransaction(
             command,

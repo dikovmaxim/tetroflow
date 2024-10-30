@@ -5,6 +5,6 @@
 #include <cstdlib>
 #include <string>
 #include "../log/Logger.hpp"
-
+#include <unistd.h>
 
 void sig_handler(int sig);

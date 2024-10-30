@@ -60,6 +60,8 @@ int main(int argc, char** argv) {
 
     int tableReserveSize = 1000;
 
+    log(LOG_INFO, "Reading configuration file: " + configFile);
+
     try {
         ConfigParser config(configFile);
 
@@ -85,6 +87,8 @@ int main(int argc, char** argv) {
         return -1;
     }
 
+    log(LOG_INFO, "Starting TetroFlow");
+
     signal(SIGSEGV, sig_handler);
     signal (SIGABRT, sig_handler);
     signal (SIGFPE, sig_handler);
@@ -92,6 +96,8 @@ int main(int argc, char** argv) {
     signal (SIGINT, sig_handler);
     signal (SIGSEGV, sig_handler);
     signal (SIGTERM, sig_handler);
+
+    log(LOG_INFO, "Started signal handling");
 
     initStorage(tableReserveSize);
 
