@@ -8,9 +8,7 @@
 
 #include "../log/Logger.hpp"
 #include "../transactions/TransactionManager.hpp"
-#include "../messages/MessageHandler.hpp"
 #include "../server/Server.hpp"
-#include "../gossip/GossipServer.hpp"
 
 
 void sig_handler(int sig) {
@@ -42,8 +40,6 @@ void sig_handler(int sig) {
     try {
         stopServer();
         stopTransactionHandling();
-        stopMessageExchangeQueue();
-        stopGossipServer();
     } catch (const std::exception& e) {
         log(LOG_ERROR, std::string("Exception during cleanup: ") + e.what());
     } catch (...) {

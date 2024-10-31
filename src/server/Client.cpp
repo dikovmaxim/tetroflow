@@ -21,9 +21,6 @@
 #include "../transactions/TransactionManager.hpp"
 #include "../Global.hpp"
 #include "Server.hpp"
-#include "../messages/messagetypes/MessageReplicate.hpp"
-#include "../messages/MessageHandler.hpp"
-#include "../messages/Message.hpp"
 #include "../datatypes/Datatype.hpp"
 
 
@@ -109,9 +106,6 @@ void Client::handle() {
             transactionCallback,
             *this
         );
-
-        std::shared_ptr<Message> message = createReplicateMessage(transaction);
-        addMessageToExchangeQueue(message);
 
         addTransaction(std::make_shared<Transaction>(transaction));
 

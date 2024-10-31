@@ -11,7 +11,7 @@
 #include "../../datatypes/List.hpp"
 #include "../../datatypes/Json.hpp"
 
-#include "../../gossip/GossipManager.hpp"
+
 
 
 namespace operations {
@@ -24,10 +24,6 @@ namespace operations {
 
         std::shared_ptr<DataType> getnodes() {
             std::shared_ptr<List> list = std::make_shared<List>();
-            std::vector<std::shared_ptr<Node>> nodes = getNodes();
-            for (auto& node : nodes) {
-                list->rpush(createJson(node->toJson()));
-            }
             return list;
         }
         
