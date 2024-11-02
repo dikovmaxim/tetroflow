@@ -5,12 +5,7 @@
 //types of messages sent and received using the gossip protocol
 
 enum MessageType {
-    MESSAGE_JOIN,
-    MESSAGE_LEAVE,
-    MESSAGE_HEARTBEAT,
-    MESSAGE_REPLICATE,
-
-    MESSAGE_UNKNOWN
+    NOTIFY_CLUSTER = 0,
 };
 
 std::string MessageTypeToString(MessageType type);

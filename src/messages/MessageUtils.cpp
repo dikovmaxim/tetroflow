@@ -6,9 +6,7 @@
 #include <cstdint>
 #include <memory>
 
-#define node_id 777
-
-int generate_unique_id() {
+uint64_t generate_unique_id() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 2147483647);
