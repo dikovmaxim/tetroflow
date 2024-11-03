@@ -12,9 +12,9 @@
 class ClientClusterPipe : public ClusterPipe {
 public:
     ClientClusterPipe(std::string ip, int port);
-    void sendBytes(std::shared_ptr<std::vector<std::byte>> message) override;
     void closePipe() override;
 private:
+    void sendBytes(std::vector<std::byte> message) override;
     void HandleMessagesWorker() override;
     void Connect() override;
     std::string ip;

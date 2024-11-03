@@ -32,8 +32,8 @@ void ClientClusterPipe::Connect() {
     workerThread = std::thread(&ClientClusterPipe::HandleMessagesWorker, this);
 }
 
-void ClientClusterPipe::sendBytes(std::shared_ptr<std::vector<std::byte>> message) {
-    if (send(fdsock, message->data(), message->size(), 0) < 0) {
+void ClientClusterPipe::sendBytes(std::vector<std::byte> message) {
+    if (send(fdsock, message.data(), message.size(), 0) < 0) {
         throw std::runtime_error("Error sending message");
     }
 }
@@ -45,7 +45,7 @@ void ClientClusterPipe::closePipe() {
 }
 
 void ClientClusterPipe::HandleMessagesWorker() {
-    this->onStateChange(ClusterPipeState::CONNECTED);
+    this->setState(ClusterPipeState::CONNECTED);
     while (running) {
         std::shared_ptr<std::vector<std::byte>> message = std::make_shared<std::vector<std::byte>>();
         char buffer[4096] = {0};
@@ -61,6 +61,6 @@ void ClientClusterPipe::HandleMessagesWorker() {
             this->onMessage(message);
         }
     }
-    this->onStateChange(ClusterPipeState::DISCONNECTED);
+    this->setState(ClusterPipeState::DISCONNECTED);
     this->closePipe();
 }

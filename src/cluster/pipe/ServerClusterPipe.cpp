@@ -23,12 +23,11 @@ void ServerClusterPipe::closePipe() {
     this->running = false;
     this->workerThread.join();
     close(this->fdsock);
-    this->state = ClusterPipeState::DISCONNECTED;
-    this->onStateChange(this->state);
+    this->setState(ClusterPipeState::DISCONNECTED);
 }
 
-void ServerClusterPipe::sendBytes(std::shared_ptr<std::vector<std::byte>> message) {
-    if (send(this->fdsock, message->data(), message->size(), 0) < 0) {
+void ServerClusterPipe::sendBytes(std::vector<std::byte> message) {
+    if (send(this->fdsock, message.data(), message.size(), 0) < 0) {
         throw std::runtime_error("Error sending message");
     }
 }
