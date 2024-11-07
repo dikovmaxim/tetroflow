@@ -9,6 +9,13 @@ ClusterNode::ClusterNode(uint64_t clusterNodeID, ClusterNodeState state, std::st
     this->port = port;
 }
 
+ClusterNode::ClusterNode() {
+    this->clusterNodeID = 0;
+    this->state = ClusterNodeState::UNKNOWN;
+    this->ip = "";
+    this->port = 0;
+}
+
 uint64_t ClusterNode::getClusterNodeID() {
     return this->clusterNodeID;
 }

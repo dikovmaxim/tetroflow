@@ -55,3 +55,4 @@ private:
     void processQueue();                        // The worker function
     std::thread queueWorkerThread;              // The worker thread
 };
+

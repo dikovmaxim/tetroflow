@@ -26,6 +26,7 @@ class ClusterServer {
         void onClientConnected(int clientfd);
     public:
         ClusterServer(uint16_t port, std::string listenIP);
+        ~ClusterServer();
         void start();
         void stop();
 };

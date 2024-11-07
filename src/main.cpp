@@ -41,8 +41,9 @@
 #include "messages/NetworkMessage.hpp"
 #include "messages/MessageUtils.hpp"
 
-
 #include "signals/Signals.hpp"
+
+#include "cluster/Cluster.hpp"
 
 int r_main(int argc, char** argv) {
 
@@ -107,26 +108,7 @@ int r_main(int argc, char** argv) {
 
 int main(int argc, char** argv) {
     
-
-
-    std::vector<std::byte> readBytes;
-    FILE* file = fopen("test.bin", "rb");
-    fseek(file, 0, SEEK_END);
-    long fileSize = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    readBytes.resize(fileSize);
-    fread(readBytes.data(), sizeof(std::byte), fileSize, file);
-    fclose(file);
-
-
-    std::shared_ptr<NetworkMessage> message = networkMessageFromBytes(readBytes);
-
-    std::shared_ptr<NodeInfoMessage> nodeInfoMessage = std::dynamic_pointer_cast<NodeInfoMessage>(deserializeToMessage(message));
-
-    //dynamic cast to NodeInfoMessage
-    std::cout << nodeInfoMessage->toString() << std::endl;
-
+    initClusterServer();
 
     return 0;
 }

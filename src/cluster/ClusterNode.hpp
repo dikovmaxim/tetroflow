@@ -34,6 +34,7 @@ protected:
 public:
 
     ClusterNode(uint64_t clusterNodeID, ClusterNodeState state, std::string ip, uint16_t port);
+    ClusterNode();
 
     uint64_t getClusterNodeID();
     ClusterNodeState getState();

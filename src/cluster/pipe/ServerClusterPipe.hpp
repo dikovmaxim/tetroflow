@@ -16,4 +16,5 @@ public:
 private:
     void HandleMessagesWorker() override;
     void sendBytes(std::vector<std::byte> message) override;
+    void Connect() override;
 };
